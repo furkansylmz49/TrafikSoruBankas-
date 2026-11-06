@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Trafik Soru Bankası</title>
+<meta name="description" content="GEP1616 Trafik ve Yol Güvenliği dersi için 133 çıkmış soru: pratik ve sınav moduyla online test.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 90'%3E%3Cpolygon points='50,5 95,85 5,85' fill='%23fff' stroke='%23d62828' stroke-width='9' stroke-linejoin='round'/%3E%3Ctext x='50' y='76' text-anchor='middle' font-family='Arial' font-weight='900' font-size='46' fill='%23111'%3E!%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: asphalt header band with a dashed lane line, one centered column, road-style progress bar */
+:root{
+  --bg:#eceff3; --surface:#ffffff; --ink:#152130; --muted:#5a6676; --line:#d4dae2;
+  --asphalt:#1c2634; --asphalt-ink:#f1f4f8; --sign:#f2b705; --sign-ink:#1c2634;
+  --ok:#1b8a4b; --okbg:#e3f4ea; --bad:#c42f2a; --badbg:#fbe5e4; --info:#2f5fb3; --infobg:#e5edfb;
+  --warn:#9a6400; --warnbg:#fdf1d6; --pur:#6d3fc0; --purbg:#efe8fb;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --r:12px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0e141b; --surface:#17202b; --ink:#e5eaf0; --muted:#93a0b0; --line:#2a3646;
+  --asphalt:#0a0f15; --asphalt-ink:#eef2f6; --sign:#f5c02a; --sign-ink:#131a23;
+  --ok:#43c47f; --okbg:#123022; --bad:#f0625c; --badbg:#3a1918; --info:#7ea6ef; --infobg:#18263f;
+  --warn:#f0b54a; --warnbg:#33270f; --pur:#b495f0; --purbg:#271c3d; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e141b; --surface:#17202b; --ink:#e5eaf0; --muted:#93a0b0; --line:#2a3646;
+  --asphalt:#0a0f15; --asphalt-ink:#eef2f6; --sign:#f5c02a; --sign-ink:#131a23;
+  --ok:#43c47f; --okbg:#123022; --bad:#f0625c; --badbg:#3a1918; --info:#7ea6ef; --infobg:#18263f;
+  --warn:#f0b54a; --warnbg:#33270f; --pur:#b495f0; --purbg:#271c3d; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--asphalt)}
+.wrap{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,label:focus-within{outline:3px solid var(--sign);outline-offset:2px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:.01em}
+
+/* header band */
+.band{background:var(--asphalt);color:var(--asphalt-ink);position:relative}
+.band::after{content:"";position:absolute;left:0;right:0;bottom:0;height:6px;
+  background:repeating-linear-gradient(90deg,var(--sign) 0 38px,transparent 38px 64px)}
+.band .wrap{padding-block:28px 34px}
+.eyebrow{font-family:var(--display);font-weight:700;letter-spacing:.16em;text-transform:uppercase;font-size:13px;color:var(--sign)}
+.band h1{font-size:clamp(34px,7vw,52px);line-height:1;margin:8px 0 10px;font-weight:800}
+.band p{margin:0;opacity:.8;max-width:56ch}
+.kpis{display:flex;gap:22px;flex-wrap:wrap;margin-top:18px;font-variant-numeric:tabular-nums}
+.kpis div{display:flex;flex-direction:column}
+.kpis b{font-family:var(--display);font-size:30px;line-height:1}
+.kpis span{font-size:13px;opacity:.7}
+
+main.wrap{padding-block:24px 64px;display:flex;flex-direction:column;gap:22px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.panel h2{font-size:22px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.panel h2 small{font-family:var(--body);font-size:13px;color:var(--muted);font-weight:500;letter-spacing:0}
+
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mode{display:flex;gap:10px;align-items:flex-start;border:2px solid var(--line);border-radius:10px;padding:12px;cursor:pointer}
+.mode input{accent-color:var(--sign);margin-top:4px}
+.mode b{display:block;font-size:16px}
+.mode span{font-size:13.5px;color:var(--muted)}
+.mode:has(input:checked){border-color:var(--sign);background:color-mix(in srgb,var(--sign) 10%,var(--surface))}
+
+.secs{display:flex;flex-direction:column}
+.sec{display:flex;align-items:center;gap:10px;padding:9px 2px;border-top:1px solid var(--line);cursor:pointer}
+.sec:first-child{border-top:0}
+.sec input{accent-color:var(--sign);width:18px;height:18px;flex:none}
+.sec .nm{flex:1;min-width:0}
+.sec .ct{font-variant-numeric:tabular-nums;color:var(--muted);font-size:13.5px;white-space:nowrap}
+.mini{display:inline-block;width:54px;height:6px;border-radius:3px;background:var(--line);overflow:hidden;vertical-align:middle;margin-left:6px}
+.mini i{display:block;height:100%;background:var(--ok)}
+.linkbtn{background:none;border:0;color:var(--info);font-weight:600;padding:0;font-size:13px}
+.opts{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:4px}
+.opts label{display:flex;gap:8px;align-items:center;font-size:14.5px;cursor:pointer}
+.opts input{accent-color:var(--sign);width:17px;height:17px}
+
+.btn{border:0;border-radius:10px;padding:13px 20px;font-weight:700;font-size:16px;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn.primary{background:var(--sign);color:var(--sign-ink)}
+.btn.ghost{background:transparent;border:1.5px solid var(--line)}
+.btn.dark{background:var(--asphalt);color:var(--asphalt-ink)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.actions .btn{flex:1 1 200px}
+.resume{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:var(--warnbg);border:1px solid color-mix(in srgb,var(--warn) 35%,transparent);border-radius:var(--r);padding:12px 14px}
+.resume p{margin:0;font-size:14.5px}
+
+/* quiz */
+.qbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--asphalt);color:var(--asphalt-ink)}
+.qbar .wrap{padding-block:10px 12px;display:flex;flex-direction:column;gap:9px}
+.qtop{display:flex;align-items:center;gap:12px}
+.qtop .back{background:none;border:1px solid color-mix(in srgb,var(--asphalt-ink) 25%,transparent);border-radius:8px;padding:5px 10px;font-size:14px}
+.qtop .pos{font-family:var(--display);font-size:20px;font-weight:700;font-variant-numeric:tabular-nums;flex:1}
+.qtop .score{font-size:14px;font-variant-numeric:tabular-nums;display:flex;gap:10px}
+.qtop .score .g{color:#5fd393}.qtop .score .r{color:#ff8a84}
+.road{height:10px;border-radius:5px;background:#3a4656;position:relative;overflow:hidden}
+.road::after{content:"";position:absolute;left:0;right:0;top:4px;height:2px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.55) 0 12px,transparent 12px 22px)}
+.road i{position:absolute;left:0;top:0;bottom:0;background:var(--sign);border-radius:5px;transition:width .25s}
+.qcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+.qsec{font-size:12.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.stem{font-size:19px;font-weight:600;line-height:1.4;margin:0 0 14px}
+.qimg{margin:-4px 0 14px}.qimg svg{height:68px;width:auto;display:block}
+.choices{display:flex;flex-direction:column;gap:9px;list-style:none;margin:0;padding:0}
+.choice{width:100%;display:flex;gap:12px;align-items:flex-start;text-align:left;background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:12px 14px;font-size:16px;line-height:1.42;transition:border-color .12s,background .12s}
+.choice:hover:not(:disabled){border-color:var(--muted)}
+.choice .k{flex:none;width:28px;height:28px;border-radius:50%;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:var(--muted);text-transform:uppercase}
+.choice .t{flex:1;min-width:0}
+.choice.sel{border-color:var(--info);background:var(--infobg)}.choice.sel .k{background:var(--info);border-color:var(--info);color:#fff}
+.choice.right{border-color:var(--ok);background:var(--okbg)}.choice.right .k{background:var(--ok);border-color:var(--ok);color:#fff}
+.choice.wrong{border-color:var(--bad);background:var(--badbg)}.choice.wrong .k{background:var(--bad);border-color:var(--bad);color:#fff}
+.choice:disabled{cursor:default}
+.fill{font-style:italic;color:var(--pur)}
+.fb{margin-top:14px;border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;font-size:15px}
+.fb.ok{background:var(--okbg)}.fb.bad{background:var(--badbg)}
+.fb .h{font-weight:700;font-size:16px}
+.fb.ok .h{color:var(--ok)}.fb.bad .h{color:var(--bad)}
+.chip{display:inline-block;font-size:12px;font-weight:700;padding:2px 9px;border-radius:20px;letter-spacing:.02em}
+.c-V{background:var(--okbg);color:var(--ok)}.c-S{background:var(--infobg);color:var(--info)}.c-K{background:var(--warnbg);color:var(--warn)}.c-T{background:var(--badbg);color:var(--bad)}
+.fb .chip{border:1px solid currentColor;background:transparent}
+.nav{display:flex;gap:10px;align-items:center}
+.nav .btn{flex:1}
+.hint{font-size:12.5px;color:var(--muted);text-align:center}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(40px,1fr));gap:6px}
+.grid button{height:38px;border-radius:7px;border:1.5px solid var(--line);background:var(--surface);font-size:13.5px;font-weight:600;font-variant-numeric:tabular-nums}
+.grid .a{background:var(--infobg);border-color:var(--info)}
+.grid .g{background:var(--okbg);border-color:var(--ok);color:var(--ok)}
+.grid .r{background:var(--badbg);border-color:var(--bad);color:var(--bad)}
+.grid .cur{outline:3px solid var(--sign);outline-offset:1px}
+details.pal summary{cursor:pointer;font-weight:600;font-size:14.5px;color:var(--muted);padding:2px 0}
+details.pal[open] summary{margin-bottom:10px}
+
+/* result */
+.res-top{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.dial{width:132px;height:132px;flex:none}
+.res-top h2{font-size:30px}
+.res-top p{margin:4px 0 0;color:var(--muted)}
+.tally{display:flex;gap:16px;margin-top:10px;font-variant-numeric:tabular-nums;font-weight:600;flex-wrap:wrap}
+.tally .g{color:var(--ok)}.tally .r{color:var(--bad)}.tally .e{color:var(--muted)}
+.bars{display:flex;flex-direction:column;gap:9px}
+.bar{display:grid;grid-template-columns:minmax(0,1fr) 140px 54px;gap:10px;align-items:center;font-size:14px}
+.bar .tr{height:8px;border-radius:4px;background:var(--line);overflow:hidden}
+.bar .tr i{display:block;height:100%}
+.bar .v{text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
+.rev{display:flex;flex-direction:column;gap:12px}
+.ri{border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:14.5px;display:flex;flex-direction:column;gap:5px}
+.ri .s{font-weight:600}
+.ri .y{color:var(--bad)}.ri .c{color:var(--ok)}
+.ri .n{color:var(--muted);font-size:13.5px}
+@media (max-width:560px){
+  .modes{grid-template-columns:1fr}
+  .stem{font-size:17.5px}
+  .bar{grid-template-columns:minmax(0,1fr) 70px 46px}
+  .qcard{padding:16px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.foot{font-size:13px;color:var(--muted);text-align:center;padding-top:8px}
+</style>
+</head>
+<body>
+
+<div id="home">
+  <header class="band"><div class="wrap">
+    <div class="eyebrow">BAU · GEP1616 Traffic and Road Safety</div>
+    <h1>Trafik Soru Bankası</h1>
+    <p>Önceki quizler, deneme sınavı ve ara sınav kâğıtlarından çıkmış sorular. Konu seç, modunu belirle, başla.</p>
+    <div class="kpis">
+      <div><b id="kTotal">0</b><span>soru</span></div>
+      <div><b id="kSeen">0</b><span>çözüldü</span></div>
+      <div><b id="kRate">–</b><span>başarı</span></div>
+      <div><b id="kWrong">0</b><span>yanlışlarım</span></div>
+    </div>
+  </div></header>
+  <main class="wrap">
+    <div class="resume" id="resumeBox" hidden>
+      <p id="resumeTxt"></p>
+      <div class="actions" style="flex:0 0 auto"><button class="btn dark" id="resumeBtn" type="button">Devam et</button></div>
+    </div>
+    <section class="panel">
+      <h2>Mod</h2>
+      <div class="modes">
+        <label class="mode"><input type="radio" name="mode" id="mPractice" value="practice" checked><div><b>Pratik</b><span>Her sorudan sonra doğru cevabı ve açıklamayı gör.</span></div></label>
+        <label class="mode"><input type="radio" name="mode" id="mExam" value="exam"><div><b>Sınav</b><span>Cevaplar sonda açıklanır, puanını görürsün.</span></div></label>
+      </div>
+      <div class="opts" style="margin-top:14px">
+        <label><input type="checkbox" id="oShufQ" checked> Soruları karıştır</label>
+        <label><input type="checkbox" id="oShufO"> Şıkları karıştır</label>
+      </div>
+    </section>
+    <section class="panel">
+      <h2>Konular <small><button class="linkbtn" id="allBtn" type="button">Tümünü seç</button> · <button class="linkbtn" id="noneBtn" type="button">Temizle</button></small></h2>
+      <div class="secs" id="secList"></div>
+    </section>
+    <div class="actions">
+      <button class="btn primary" id="startBtn" type="button">Başla</button>
+      <button class="btn ghost" id="wrongBtn" type="button">Yanlışlarımı çöz</button>
+    </div>
+    <p class="foot">İlerlemen yalnızca bu tarayıcıda saklanır. Sorular önceki dönem sınavlarından derlenmiştir; cevaplar ders içeriği ve Karayolları Trafik Kanunu ile kontrol edilmiştir.</p>
+    <div class="actions"><button class="btn ghost" id="resetBtn" type="button" style="flex:0 0 auto;font-size:14px;padding:9px 14px">İlerlemeyi sıfırla</button><span id="resetAsk" hidden style="align-self:center;font-size:14px">Emin misin? <button class="linkbtn" id="resetYes" type="button" style="color:var(--bad)">Evet, sıfırla</button> · <button class="linkbtn" id="resetNo" type="button">Vazgeç</button></span></div>
+  </main>
+</div>
+
+<div id="quiz" hidden>
+  <div class="qbar"><div class="wrap">
+    <div class="qtop">
+      <button class="back" id="quitBtn" type="button">← Çık</button>
+      <div class="pos" id="qPos"></div>
+      <div class="score" id="qScore"></div>
+    </div>
+    <div class="road"><i id="qRoad"></i></div>
+  </div></div>
+  <main class="wrap">
+    <article class="qcard">
+      <div class="qsec" id="qSec"></div>
+      <p class="stem" id="qStem"></p>
+      <div class="qimg" id="qImg" hidden></div>
+      <ol class="choices" id="qChoices"></ol>
+      <div class="fb" id="qFb" hidden></div>
+    </article>
+    <div class="nav">
+      <button class="btn ghost" id="prevBtn" type="button">← Önceki</button>
+      <button class="btn primary" id="nextBtn" type="button">Sonraki →</button>
+    </div>
+    <div class="hint">Klavye: A–E veya 1–5 ile seç · Enter / → sonraki · ← önceki</div>
+    <details class="pal panel" id="palBox"><summary>Soru haritası</summary><div class="grid" id="qGrid"></div></details>
+  </main>
+</div>
+
+<div id="result" hidden>
+  <header class="band"><div class="wrap">
+    <div class="eyebrow" id="rMode">Sonuç</div>
+    <div class="res-top" style="margin-top:10px">
+      <svg class="dial" id="rDial" viewBox="0 0 120 120"></svg>
+      <div>
+        <h2 id="rTitle"></h2>
+        <p id="rSub" style="color:inherit;opacity:.75"></p>
+        <div class="tally" id="rTally"></div>
+      </div>
+    </div>
+  </div></header>
+  <main class="wrap">
+    <div class="actions">
+      <button class="btn primary" id="rRetryWrong" type="button">Yanlışları tekrar çöz</button>
+      <button class="btn ghost" id="rHome" type="button">Ana sayfa</button>
+    </div>
+    <section class="panel"><h2>Konulara göre</h2><div class="bars" id="rBars"></div></section>
+    <section class="panel"><h2>Yanlış ve boş bıraktıkların <small id="rRevCt"></small></h2><div class="rev" id="rRev"></div></section>
+  </main>
+</div>
+
+<script>
+const SECTIONS = ["1. Quiz — Sürücü Eğitimi ve Sürücü Sağlığı", "2. Quiz — Kaza Anı, Kaza Önlemleri, İlk Yardım", "4. Quiz — Hız ve Sollama", "6. Quiz — Gece Sürüşü ve Kaygan Yol", "7. Quiz — Diğer Sürücüler", "8. Quiz — Arazi Taşıtları", "9. Quiz — Motosiklet", "10. Quiz — Büyük Araçlar (Ağır Vasıtalar)", "Kavşaklar ve Asli Kusur Quizi", "Deneme Sınavı (her soru 2 puan)", "Ara Sınav Kâğıdı — 2025-2026 Yaz Dönemi (1–15)", "Ara Sınav Kâğıdı — Sayfa 2 (33–47)", "Ara Sınav Kâğıdı — Sayfa 3 (40–47, başka dönem)"];
+const QS = [{"id": 0, "s": 0, "q": "Sürücünün kazaya neden olabilecek önemli hatalarından biri aşağıdakilerden hangisi olabilir? (Sürücüden kaynaklanan)", "o": ["Sürücünün koltuk ayarları bozuk olursa kazaya neden olabilir.", "Frene bastığımızda araç bir tarafa çekiyorsa.", "Direksiyonu bıraktığımızda araç bir tarafa çekiyorsa.", "Benzin lambası yanıp sönmeye başladığı zaman."], "c": 0, "n": "", "img": null}, {"id": 1, "s": 0, "q": "Araç kullanırken göz sağlığı için riskler nelerdir?", "o": ["Klimadan gelen hava gözlerimizi kurutur.", "Asfalttan parlayan güneş ışığı ve karşıdan gelen araçların farları gözümüzü yorar.", "Ormanlık alanda sık gölge ve ışıklı alanlar gözümüzü yorar.", "Hepsi doğru."], "c": 3, "n": "", "img": null}, {"id": 2, "s": 0, "q": "Sağlıklı bir sürücü hiç durmadan en fazla kaç saat araç kullanmalıdır?", "o": ["7 saat", "5 saat", "3 saat", "9 saat"], "c": 2, "n": "", "img": null}, {"id": 3, "s": 0, "q": "Yeni başlayan stajyer sürücü yasasının amacı nedir?", "o": ["Doğru öğrendiklerimizi alışkanlık haline getirmektir.", "Araç kullanarak dikkatli öğrenmeye devam etmek.", "Kazaları azaltmak.", "Hepsi doğru."], "c": 3, "n": "", "img": null}, {"id": 4, "s": 0, "q": "İyi bir sürücü nasıl olmalıdır?", "o": ["Riskleri zamanında fark edebilmelidir.", "Yavaş araç kullanmalıdır.", "İyi araç kullanmayı düşünmelidir.", "Zamanla kendisini geliştirmelidir."], "c": 0, "n": "Tuzak şık: “Zamanla kendisini geliştirmelidir” bu soruda doğru sayılmıyor. İyi sürücünün temel özelliği riskleri zamanında fark etmesidir.", "img": null}, {"id": 5, "s": 0, "q": "Sürücünün yeteneklerinden aşağıdaki şıklardan hangisi doğrudur?", "o": ["Araç sürerken beynimiz gözümüzün gördüğüne karar verecektir.", "3 saatten fazla araç sürmek gözü yorar ve geç görmeye başlarız.", "Bazen de göz sağlıklı fakat beyin sevinçli ve üzüntülü hallerde meşgul olabilir. Sürücünün beyni meşgul olursa geç müdahale edip kazaya neden olabilir.", "Hepsi. Bütün şıklar doğru."], "c": 3, "n": "", "img": null}, {"id": 6, "s": 0, "q": "Ne zaman algılama zamanı uzar?", "o": ["Telefonla konuşuyorsak.", "3 saatten fazla araç kullanıyorsak.", "Moralimiz bozuk olursa.", "Hepsi doğru."], "c": 3, "n": "", "img": null}, {"id": 7, "s": 0, "q": "Göz yorgunluğunun belirtileri nelerdir?", "o": ["Gözlerde sulanma veya kuruma.", "Gözlerde kızarma, yanma ve kaşıntı.", "Işığa karşı hassasiyet, bulanık ve çift görme.", "Hepsi doğru."], "c": 3, "n": "", "img": null}, {"id": 8, "s": 1, "q": "Dünyada ve ülkemizde en çok kaza hangi yaş aralığında gerçekleşmektedir?", "o": ["18-25 yaş arası", "25-35 yaş arası", "35-50 yaş arası", "50-65 yaş arası"], "c": 0, "n": "Hem dünyada hem Türkiye'de en çok kazaya karışan grup 18-25 yaş arası genç sürücülerdir.", "img": null}, {"id": 9, "s": 1, "q": "Sürücünün yeteneklerinden aşağıdaki şıklardan hangisi doğrudur?", "o": ["Araç sürerken beynimiz gözümüzün gördüğüne karar verecektir.", "3 saatten fazla araç sürmek gözü yorar ve geç görmeye başlarız.", "Bazen de göz sağlıklı fakat beyin sevinçli ve üzüntülü hallerde meşgul olabilir. Sürücünün beyni meşgul olursa geç müdahale edip kazaya neden olabilir.", "Hepsi. Bütün şıklar doğru."], "c": 3, "n": "", "img": null}, {"id": 10, "s": 1, "q": "Sürüş eğitimi için aşağıdaki şıklardan hangisi doğrudur?", "o": ["Sürüş eğitimi için mekanik hareketleri doğru ve şartlı refleks haline getirene kadar eğitim alınmalıdır.", "Bilim dünyası en az yaşı kadar direksiyon eğitimi alması gerektiğini söyler. Fakat insan yetenekleri farklı olduğunu dikkate alarak yeterince eğitim almalıyız.", "Sürücü stajyerlik döneminde hareketlerini disiplinli bir şekilde şartlı refleks haline getirmelidir.", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "", "img": null}, {"id": 11, "s": 1, "q": "Koltuk başlıklarının görevi için aşağıdakilerden hangisi doğrudur?", "o": ["Uzun yolda başımızın yorulmasını önler.", "Yoğun trafikte başımızın yorulmasını önler.", "Kazalarda boynumuzun kırılmasını önler.", "Gece sürüşlerinde başımızın yorulmasını önler."], "c": 2, "n": "", "img": null}, {"id": 12, "s": 1, "q": "Kaza anında uyarıcı ikaz reflektörü kaç metreye konulur?", "o": ["Aracın önüne ve arkasına 20 metreden görülecek şekilde 20 metre önüne ve arkasına uyarıcı ikaz işareti reflektör koyulur.", "Aracın önüne ve arkasına 50 metreden görülecek şekilde 10 metre önüne ve arkasına uyarıcı ikaz işareti reflektör koyulur.", "Aracın önüne ve arkasına 150 metreden görülecek şekilde 30 metre önüne ve arkasına uyarıcı ikaz işareti reflektör koyulur.", "Aracın önüne ve arkasına 250 metreden görülecek şekilde 25 metre önüne ve arkasına uyarıcı ikaz işareti reflektör koyulur."], "c": 2, "n": "Kural: reflektör, gelen sürücülerin en az 150 metreden görebileceği şekilde konur; görüşün kısıtlı olduğu yerlerde aracın en az 30 metre önüne ve arkasına yerleştirilir.", "img": null}, {"id": 13, "s": 1, "q": "Bilim insanları trafik kurallarını neye göre belirlemişlerdir?", "o": ["Yol şartlarına göre belirlemişlerdir.", "Araç kapasitesine göre belirlemişlerdir.", "İnsan yeteneklerine göre belirlemişlerdir.", "Hepsi. Bütün şıklar doğru."], "c": 2, "n": "Tuzak soru: “Hepsi” yanlış sayılıyor. Trafik kuralları insanın algılama ve tepki verme yeteneklerine göre belirlenir.", "img": null}, {"id": 14, "s": 1, "q": "Kaza anında <b>ilk önce</b> ne yapmalıyız?", "o": ["Başka kaza olmasın diye kaza yeri önlemleri almalıyız.", "Kaza yeri fotoğraflarını çekmeliyiz.", "Kaza aracı kaymasın diye el frenini çekmeliyiz.", "Yangın çıkmasın diye aracın sigortasını sökmeliyiz."], "c": 0, "n": "İlk iş kaza yerinin güvenliğini sağlamaktır (dörtlüler, reflektör), böylece ikinci bir kaza önlenir. Fotoğraf ve diğer işlemler sonra gelir.", "img": null}, {"id": 15, "s": 1, "q": "Kazalar için aşağıdaki şıklardan hangisi doğrudur?", "o": ["Telefon ve araç içindeki diğer aygıtlarla meşgul olmamalıyız. Araç kullanmak sorumluluk sahibi olmaktır. (Kendinize, ailenize, arkadaşlarınıza ve yoldaki diğer sürücülere ve diğer sürücülerin yakınlarına sorumluyuz.)", "Aracımız da bakımlı olmalıdır. Özellikle fren ve direksiyon sistemi; kısaca yavaşlatma, durdurma ve yönlendirme sistemi. Lastikler bakımı önemlidir.", "Bütün önlemler ve çok düzgün araç kullanmanıza rağmen maalesef bir kazaya karıştıysak hemen kaza yeri önlemleri almalı, görevlilere haber vermeli ve sonra kaza tespit tutanağını imzalamalıyız.", "Hepsi. Bütün şıklar doğru."], "c": 3, "n": "", "img": null}, {"id": 16, "s": 1, "q": "Trafik kazaları için aşağıdaki şıklardan hangisi doğrudur?", "o": ["İyi bir eğitim almalıyız. Direksiyon hâkimiyetimiz trafik kurallarına şartlı refleks halinde olmalıdır.", "Direksiyonda doğru oturmalıyız. Trafik kurallarına uymalıyız. Kemerimizi takmalı ve araç içindeki herkese taktırmalıyız.", "Araç kullanırken kesinlikle direksiyon ve sürüşe odaklanmalıyız. (Beynimiz sınav, maç, aşk gibi hayatın diğer konularına odaklanmamalı, meşgul olmamalı.)", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "", "img": null}, {"id": 17, "s": 1, "q": "Bilim insanları trafik kurallarını neye göre belirlemişlerdir? (2. Quiz — başka dönem)", "o": ["Yol şartlarına göre belirlemişlerdir.", "Araç kapasitesine göre belirlemişlerdir.", "İnsan yeteneklerine göre belirlemişlerdir.", "Hepsi. Bütün şıklar doğru."], "c": 2, "n": "Tuzak soru: “Hepsi” yanlış sayılıyor. Doğru cevap “insan yetenekleri”.", "img": null}, {"id": 18, "s": 2, "q": "Park yaparken nelere dikkat etmeliyiz? Aşağıdaki şıklardan hangisi doğrudur?", "o": ["Park yaparken acele edilmez. Sakin ve yavaş hareketlerle aracımızı kullanmalıyız.", "Park yapacağımız alana geri manevra ile yaklaşmalıyız. Park ettiğimiz zaman aracın ön tarafı (direksiyon) çıkışa yola bakmalıdır.", "Park alanından veya garajdan ya da park etmiş araçların arasından yola geri manevra ile çıkılmaz.", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "", "img": null}, {"id": 19, "s": 2, "q": "Aracı park ederken aşağıdaki şıklardan hangisi doğrudur?", "o": ["Sürücünün zamanla seri park etme yetenekleri gelişecektir. Sürücü acele etmeden kendisine zaman tanımalıdır.", "Park esnasında aynalardan göremeyebileceğimiz kör noktalar olabilir. Dönüp veya inip bakmak gerekebilir.", "Park yaparken yoldaki diğer sürücüleri flaşörle uyarmak ve nazikçe zaman tanımalarını istemek faydalıdır.", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "", "img": null}, {"id": 20, "s": 2, "q": "Bir araç geçmek (sollama) için aşağıdaki şıklardan hangisi doğrudur?", "o": ["Önümüzdeki araç gidiş ve görüşümüzü engelliyorsa (kamyon vs.) sollama ihtiyacı duyarız.", "Mevcut hızımız yeterli ise önümüzdeki aracı geçmemize gerek olmayabilir.", "Geçme kararını sürücünün kendisi vermelidir.", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "", "img": null}, {"id": 21, "s": 2, "q": "Şerit değiştirme konusunda aşağıdaki şıklardan hangisi doğrudur?", "o": ["Şerit değiştireceğimiz zaman mutlaka aynalardan arkamızdaki araçları görmemiz ve kontrol etmemiz gerekir.", "Şerit değiştireceğimiz zaman aynaları kontrol etmek yeterli olmayabilir. Dönerek bakmamız gerekir. (Omuz bakışı)", "Şerit değiştirmede sollama sayılır.", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "", "img": null}, {"id": 22, "s": 2, "q": "Hız ve fren için aşağıdaki şıklardan hangisi doğrudur?", "o": ["Fren yaptığımız zaman araç hemen duramayabilir.", "Fren yaptığımız zaman tekerler durabilir, fakat aracımız yerde sürüklenerek yola devam edebilir.", "Hızlandıkça aracımız uçaklar gibi havalanır ve tekerleklerimiz yeterince yere temas edemez.", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "", "img": null}, {"id": 23, "s": 2, "q": "Aşırı hız için aşağıdaki şıklardan hangisi doğrudur?", "o": ["Algılama zamanımızın uzadığı, frene hemen basamayacağımız veya daha sonra basacağımız hız aşırı hızdır.", "Trafik kurallarının belirlediği hızı geçmemiz aşırı hızdır.", "120 km süratin üzeri aşırı hızdır.", "Hepsi. Bütün şıklar doğru."], "c": 0, "n": "Tuzak soru: “Hepsi” yanlış sayılıyor. Derste aşırı hız, algılama zamanının uzadığı ve frene zamanında basılamayan hız olarak tanımlanıyor.", "img": null}, {"id": 24, "s": 2, "q": "Sollama (araç geçme) konusunda aşağıdaki şıklardan hangisi doğrudur?", "o": ["Sollama işlemi kısa zamanda yapılmalı (9 saniye) ve sol şerit tekrar boşaltılmalıdır.", "Sollama yapamamak (becerememek) veya sollamamak ayıp ve suç değildir.", "Sürücü her zaman doğru sollama kararı veremeyebilir.", "Hepsi. Bütün şıklar doğru."], "c": 3, "n": "", "img": null}, {"id": 25, "s": 2, "q": "Sollama konusunda aşağıdaki şıklardan hangisi doğrudur?", "o": ["Araç geçmek için yeterli görüş mesafesi olmalıdır.", "Sollayan diğer araçlar hatalıda olsalar yardımcı olmamız, olası kazayı önlememiz gerekir.", "Konvoy halindeki araçlar varsa yeterli mesafe göremiyorsak sollama yapılmaz.", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "", "img": null}, {"id": 26, "s": 3, "q": "Karlı havada araç kullanmak için aşağıdaki şıklardan hangisi doğrudur?", "o": ["Karlı havada mümkünse yola çıkmamak daha uygundur.", "Yoldaki diğer sürücülerin çarpma durumu göz önünde bulundurulur.", "Uzun zaman yolda kalma riskine karşı donanımlı yedek malzeme araçta bulundurulmalıdır. (su-yiyecek-battaniye-telefon şarjı-eldiven-çizme-kar küreği vs.)", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "", "img": null}, {"id": 27, "s": 3, "q": "Kış lastiğinin özellikleri nelerdir?", "o": ["Kışın kar yağsın yağmasın düşük sıcaklıklarda aracın yola tutunmasını artırır.", "Buzda en kısa zamanda durmasını sağlar.", "Kar lastiği olduğu zaman zincir takmamıza gerek yoktur.", "Hepsi doğru."], "c": 0, "n": "", "img": null}, {"id": 28, "s": 3, "q": "Yaz mevsiminde araç kullanırken nelere dikkat edilmelidir?", "o": ["Serviste aracın yazlık bakımı mutlaka yaptırılmalıdır.", "Klima, yazlık lastikler, cam silecekleri, hava filtresi, klima filtreleri kontrol ettirilmelidir.", "Terlikle araç kullanılmamalıdır.", "Hepsi. Bütün şıklar doğru."], "c": 3, "n": "", "img": null}, {"id": 29, "s": 3, "q": "Karlı havada araç kullanırken nelere dikkat edilir?", "o": ["Karlı yollarda araç kullanırken gaza basıp yüksek devirde araç kullanılmaz.", "Fazla gaza basmadan düşük devir bir üst viteste araç kullanmak patinajı ve savrulmayı önler. Kalkışlarda yardımcı olur.", "Sert direksiyon hareketlerinden kaçınmak gerekir. Ani duruş ve kalkışlardan kaçınmak gerekir.", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "", "img": null}, {"id": 30, "s": 3, "q": "Gece sürüşleri neden daha tehlikelidir?", "o": ["Gece sürüşlerinde görüş açısı azalır.", "Karşıdan gelen araçların farları gözümüzü yorar.", "Arkadan gelen araçların farları dikiz aynasından ve yan aynadan yansıyarak gözümüzü yorar.", "Hepsi. Bütün şıklar doğru."], "c": 3, "n": "", "img": null}, {"id": 31, "s": 3, "q": "Gece sürüşleri için aşağıdaki şıklardan hangisi doğrudur?", "o": ["Havaların karardığı gece saatlerinde görüş açısı zorlaşıyor ve trafikteki her şeyi; trafik levhalarını, yayaları, bisikletleri görebilmek çok daha zorlaşıyor. Bu yüzden takip mesafesini iyi ayarlamak gerekiyor.", "Derinlik algımız geceleri çok iyi değildir. Bu nedenle daha fazla konsantre olup daha az göz kırparız. Araç içi aydınlatma bir başka önemli konudur. Gösterge ışıklarının parlak olması dikkat dağıtıcı olabilir. Göstergelerin görünür olması fakat dikkat dağıtmayacak şekilde ayarlanması önerilir.", "Aracımızı farlarımızın aydınlattığı uzaklıkta, önümüzü görebildiğimiz ve durabileceğimiz hızda sürmeliyiz.", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "", "img": null}, {"id": 32, "s": 3, "q": "Gece sürüşlerinde far ayarları için aşağıdakilerden hangisi doğrudur?", "o": ["Far ışıkları karşıdan gelen sürücünün görüşünü kısıtlamamalıdır.", "Far ışıkları yolun kenar çizgisini ve yolun dışını göstermelidir.", "Far ışıkları önümüzde giden aracın arka bagajının üstüne çıkmamalı ve önümüzde giden sürücünün sürüşünü riske sokmamalı.", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "", "img": null}, {"id": 33, "s": 3, "q": "Yazın sıcak havada araç kullanılması için aşağıdaki şıklardan hangisi <b>yanlıştır</b>?", "o": ["Sıcakta asfalt eriyebileceği için lastiklere yapışıp frenler tutmayabilir.", "Yazın hava filtresi tozdan daha sık tıkanır ve yakıt sarfiyatı artar.", "Yazın antifriz mutlaka kontrol edilmelidir.", "Yazın klima veya camlar açık olursa yakıt sarfiyatı artar.", "Hepsi. Bütün şıklar doğrudur."], "c": 4, "n": "Bu soruda beş şık var ve şıklardaki ifadelerin hepsi doğru. Yanlış ifade olmadığı için son şık doğru cevap.", "img": null}, {"id": 34, "s": 3, "q": "Kışın aracımızın kaymaması için ne yapmalıyız?", "o": ["Sert direksiyon hareketlerinden, ani duruş ve kalkışlardan kaçınırız.", "Devamlı vites değiştirmeye hazır oluruz.", "Önümüzdeki araçları yakın takip ederiz.", "Direksiyonda seri hareketlere hazır oluruz."], "c": 0, "n": "", "img": null}, {"id": 35, "s": 3, "q": "Yazın sıcak havada araç kullanılması için aşağıdaki şıklardan hangisi doğrudur?", "o": ["Bol su içilmeli ve ağır yiyeceklerden uzak durulmalıdır.", "Terlikle araç kullanılmamalıdır.", "Güneşin altında aracı park ettiğimizde cam silecekleri eriyip cama yapışabilir. Cam sileceklerini kaldırmalı veya sileceklerin altına havlu peçete koymalıyız.", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "", "img": null}, {"id": 36, "s": 4, "q": "Saldırgan sürücüler için aşağıdaki şıklardan hangisi doğrudur?", "o": ["Sürücü, trafik ortamında öne çıkan benlik parçasına yapılan bir davranışı ya da ortaya çıkan bir engellenmeyi kendine yönelik olarak algılayabilir ve normalden daha aşırı bir tepkide bulunabilir.", "Saldırgan kendini aracıyla ya da sürücülüğüyle tanımlayan bir sürücü, benlik tanımında bunların daha az yer kapladığı ve daha az önemli olduğu diğer bir sürücüye göre daha saldırgan bir sürüş sergileyebilmektedir.", "Sürücüler diğer sürücülerden daha üstün olmak ve benlik saygısını yükseltmek için saldırgan davranışları (hız yapma, yakın takip, korna çalma vs.) kullanabilmektedir.", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "", "img": null}, {"id": 37, "s": 4, "q": "Saldırgan sürücüler için aşağıdaki şıklardan hangisi doğrudur?", "o": ["Kişi kendini bazen bir grupla, bazen düşünce yapısı ve becerileriyle, bazen fiziksel özellikleriyle, bazen de kullandığı araçla tanımlar.", "Benlik yapısında sürücü olmanın ya da sahip olduğu aracın önemli bir yer kapladığı sürücü, trafik ortamında kendini bununla tanımlayacaktır.", "Aracının sahip olduğu statü sürücünün kendi statüsünü de etkileyecek ve ona yüklediği anlam trafikteki sürücü davranışlarını belirleyebilecektir.", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "", "img": null}, {"id": 38, "s": 4, "q": "Diğer sürücülerin yaratacağı önemli tehlikeler aşağıdakilerden hangisidir?", "o": ["Kavşaklarda dönüş manevralarını yanlış yapabilirler.", "Karşı yola geçip kazaya neden olabilirler.", "Kavşaklarda ilk geçiş hakkına uymayabilirler.", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "", "img": null}, {"id": 39, "s": 4, "q": "Saldırgan sürücüler için aşağıdaki şıklardan hangisi doğrudur?", "o": ["Ayrıca, benlik değerini artırma ya da koruma anlamına gelen, yarışma ve kazanma ihtiyacı olarak tanımlanan yüksek rekabetçiliği olan sürücüler daha sıklıkla saldırgan sürüş davranışı gösterebilmektedir.", "Bu sürücüler korna çalma, trafikte zikzaklar çizerek ilerlemeye çalışma, diğer sürücünün önünü kesme ve kırmızı ışıkta hızla geçme gibi araçsal davranışlarda bulunmaktadır.", "Bu gibi davranışlar engelleyiciye zarar vermeyi amaçlayan, sorunu çözmeyen, ama sürücünün kendini daha iyi hissetmesini sağlayan davranışlara örnektir.", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "", "img": null}, {"id": 40, "s": 4, "q": "Şekildeki işaret levhası neyi anlatmaktadır?", "o": ["Tren yolu geçidini anlatmaktadır.", "Ağır vasıta giremez işaret levhasıdır.", "Tehlike uyarı işareti, kontrolsüz kavşağa yaklaşıldığını anlatmaktadır.", "İlerde yolun kapalı olduğunu anlatmaktadır."], "c": 2, "n": "", "img": "IMG_KAVSAK"}, {"id": 41, "s": 4, "q": "Saldırgan sürücüler hakkında aşağıdaki şıklardan hangisi doğrudur?", "o": ["Araçlarla oynanması (modifiye edilmesi - özel lastik ve camlar, egzoz düzenlemeleri gibi) saldırganlık ve fark edilme egosunu ön plana çıkarmaktadır. Araba ve kimlik arasında güçlü bir ilişki olduğunu düşünebiliriz.", "Kendilerini “acemi” olarak tanımlayan sürücüler daha az saldırgan sürücüler olarak izlenmektedir.", "Korunma yöntemi olarak arkadan gelen saldırgan bir sürücü için, önündeki araçla takip mesafesini uzatmak iyi bir yöntem olarak kabul edilebilir.", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "", "img": null}, {"id": 42, "s": 4, "q": "Diğer sürücülerden, yoldan veya hava şartlarından gelebilecek tehlikelere karşı nasıl hazır olmalıyız?", "o": ["Karlı veya sisli havalarda görüş mesafesi yeterli olmadığı zamanlarda uygun hızda araç sürülür.", "Duran araçların arasından çıkarken göremeyeceğimiz bir taşıtın olabileceğini tahmin etmeliyiz.", "Diğer araçların hatalı dönüş manevraları ve solama yapabileceğini tahmin etmeliyiz.", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "", "img": null}, {"id": 43, "s": 4, "q": "Kaza riski taşıyan sürücüyü nasıl doğru tahmin edebiliriz?", "o": ["Yoldaki bir sürücü sık şerit değiştiriyor ve yakın takip ediyorsa.", "Tahammülsüz davranışlar ve ışıkta gereksiz gaza basıp ses çıkartıyorsa.", "Direksiyondaki oturuş pozisyonu hatalı ve yola bakmıyor, devamlı başka bir şeylerle ilgileniyorsa. Yüksek sesli müzik dinliyor ve dinletiyor.", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "", "img": null}, {"id": 44, "s": 4, "q": "Diğer sürücülerin yaratacağı önemli tehlikeler aşağıdakilerden hangisidir?", "o": ["Önümüzde giden kamyon eli ile sollama işareti verip, hatalı sollama yapmamıza neden olabilir.", "Önümüzde giden araç hızla sollama yapabilir.", "Önümüzde giden araç aniden hızlanabilir.", "Hepsi. Bütün şıklar doğrudur."], "c": 0, "n": "Tuzak soru: burada “Hepsi” değil. Ders, öndeki kamyonun el işaretine güvenip sollamayı en önemli tehlike olarak veriyor.", "img": null}, {"id": 45, "s": 5, "q": "Arazi araçlarını kullanırken nelere dikkat edilmelidir?", "o": ["Hareketler yavaş ve hafif olmalıdır.", "Mümkün olduğu kadar sabit hızla gidilmelidir.", "Başparmaklar direksiyon üzerinde olmalıdır.", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "", "img": null}, {"id": 46, "s": 5, "q": "Arazide araç kullanırken aşağıdaki şıklardan hangisi doğrudur?", "o": ["Lastik hava basınçları artırılır.", "Koltuk ayarları önümüzü ve yolu görmek için cama yakın olmalıdır.", "Far ayarları geniş ve ilersini görmeye ayarlanır.", "Hepsi. Bütün şıklar doğrudur."], "c": 1, "n": "Arazide koltuk, önü ve yolu iyi görecek şekilde cama yakın ayarlanır. Lastik basıncı arazide düşürülür, artırılmaz.", "img": null}, {"id": 47, "s": 5, "q": "Arazide sudan geçerken nelere dikkat edilmelidir?", "o": ["Suyun derinliği 130 cm fazla olmamalıdır, akıntıya 90 derece gidilir.", "Suyun içinde hız azaltılır ve dalgaların tersine gidilir.", "Motor stop edilmez.", "Hepsi. Bütün şıklar doğrudur."], "c": 2, "n": "Su geçişinde motor stop edilmez; motor durursa egzozdan su girebilir.", "img": null}, {"id": 48, "s": 5, "q": "Araziye çıkmadan önce yanımızda olması gerekenler hangileridir?", "o": ["Her türlü hava şartları için giysi ve yiyecek.", "Yedek motor yağı.", "Yedek fren hidrolik yağı.", "Hepsi. Bütün şıklar doğrudur."], "c": 0, "n": "Yağ ve fren hidroliği yerine öncelik her türlü hava şartına uygun giysi ve yiyecek bulundurmaktır.", "img": null}, {"id": 49, "s": 5, "q": "Güç aktarma organları için aşağıdaki şıklardan hangisini doğru olarak kabul etmeliyiz?", "o": ["Arazi araçları, motordan aldığı hareketi güç aktarma organları vasıtası ile istenirse öndeki iki tekere, istenirse arkadaki iki tekere veya dört tekere iletebilir.", "Arazi araçları, motordan aldığı hareketi yalnızca aynı anda dört tekere iletebilme özelliğine sahiptir.", "Arazi araçları, güç aktarma organları vasıtası üstünlüğü ile şehir içinde diğer otomobillerden daha az yakıt harcar.", "Hepsi. Bütün şıklar doğrudur."], "c": 0, "n": "Arazi araçları gücü istenirse öne, arkaya veya dört tekere birden aktarabilir.", "img": null}, {"id": 50, "s": 5, "q": "Karlı arazide araç kullanılırken nelere dikkat edilir?", "o": ["İkinci vitesle kalkış yapılır.", "Yoğun karlı havada mutlaka arka iki tekere zincir takılmalıdır.", "Değişik hızlarda kısa aralıklarla araç kullanılmalıdır.", "Hepsi. Bütün şıklar doğrudur."], "c": 0, "n": "Karlı zeminde patinajı önlemek için ikinci vitesle kalkılır.", "img": null}, {"id": 51, "s": 5, "q": "Arazide inişlerde nasıl hareket edilmelidir?", "o": ["İniş halinde pedallar kullanılmaz.", "Zorunlu hallerde zemin kuru ise el freninden yararlanılır.", "En düşük viteste araç kullanılır.", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "", "img": null}, {"id": 52, "s": 5, "q": "Kayalık arazide araç kullanırken neye dikkat edilmelidir?", "o": ["Kayalık arazide devamlı frene basılı tutmaya dikkat edilir.", "Kayalık arazide rotların çıkmamasına dikkat edilir.", "Kayalık arazide diferansiyelin taş veya kayalara çarpmamasına dikkat edilir.", "Hepsi. Bütün şıklar doğrudur."], "c": 2, "n": "Kayalık arazide en büyük risk diferansiyelin taşlara çarpmasıdır.", "img": null}, {"id": 53, "s": 5, "q": "Günümüzde şehir içinde kullanılan arazi araçlarına benzer araçların daha çok kaza yapma nedeni için aşağıdaki şıklardan hangisi doğrudur?", "o": ["Sürücünün aracına aşırı güvenmesi en önemli kaza nedenidir.", "Sürücünün kullandığı aracın özelliklerini tam olarak bilmemesidir.", "Arazi araçları özellikleri ile şehir içindeki trafikte, asfaltta kullanma özellikleri fark edebilir. Sürücünün bunu doğru bilmesi gerekmektedir.", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "", "img": null}, {"id": 54, "s": 6, "q": "Güvenli motosiklet kullanımı için aşağıdaki şıklardan hangisi doğrudur?", "o": ["Sürücü bakış kontrolleri yapıp devamlı gitmek istediği yere bakmalıdır.", "Öncelikle ön frene basıp sonra arka freni kullanmaya hazır [[olmalıdır.]]", "[[Virajlarda hızlanarak dönülmelidir.]]", "[[Hepsi. Bütün şıklar doğrudur.]]"], "c": 0, "n": "", "img": null}, {"id": 55, "s": 6, "q": "Motosiklet kullanıcısı için yoldaki riskler nelerdir?", "o": ["Yoldaki beyaz çizgiler üzerinde fren yapmak, tramvay yolu metali, ıslak yapraklar.", "Diğer saldırgan sürücüler ve dönüş manevralarını hatalı yapan sürücüler.", "Sürücünün yüksek egosu, kendine ve aracına aşırı güvenmesi kaza riski taşıyabilir.", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "", "img": null}, {"id": 56, "s": 6, "q": "Motosikletle yokuş aşağı nemli parke yolda gidileceği zaman frenleme işlemi için aşağıdaki şıklardan hangisi doğrudur?", "o": ["Yokuşa yaklaşırken yavaşlanılır, yokuşta hız fazla ise vites küçültülür (kompresyon freni sağlanıp yavaşlanılır), gerekirse arka fren yavaşça sıkılarak yavaşlanılır. Gerekirse yokuş mesafesi inilip yürünerek geçilir.", "Yokuşta iniş tehlike arz ediyorsa ön frene sıkı bir şekilde basılıp yardım alınır.", "Gerekirse ABS freni ile beraber el freninden de yardım alınır.", "Hepsi. Bütün şıklar doğrudur."], "c": 0, "n": "Islak zeminde ön freni sert sıkmak kaymaya yol açar. Önce yavaşlanır, vites küçültülür ve gerekirse arka fren yumuşakça kullanılır.", "img": null}, {"id": 57, "s": 6, "q": "Güvenli motosiklet kullanımı için aşağıdaki şıklardan hangisi doğrudur?", "o": ["Önde giden otomobilin sağ arka teker izi takip edilmelidir.", "Işıklarda beklemekte olan araç konvoyunun arasından geçme avantajını kullanmalıdır.", "Sürücünün gözleri devamlı hareket halinde olmalıdır.", "Hepsi. Bütün şıklar doğrudur."], "c": 2, "n": "Motosikletçinin gözleri sürekli hareket halinde olmalı, çevreyi taramalıdır. Konvoy arasından geçmek tehlikelidir.", "img": null}, {"id": 58, "s": 6, "q": "Motosiklet sürücüsü kazalara karşı kendisini nasıl korumalıdır?", "o": ["Olabilecekleri önceden doğru tahmin etmelidir.", "Eğitilmiş reflekslere sahip olmalı ve yeniden öğrenmeye açık olmalıdır.", "Her zaman [[tam kask, koruyucu giysi ve donanımla motosiklet sürmelidir.]]", "[[Hepsi. Bütün şıklar doğrudur.]]"], "c": 3, "n": "", "img": null}, {"id": 59, "s": 6, "q": "Motosiklet kullanmanın riskleri neler olabilir?", "o": ["Diğer sürücüler motosiklet gibi küçük nesneleri gerçekte olduğundan daha uzak bir noktaymış gibi görme riski olabilir.", "Küçük nesnelerin fark edilen hızları da, gerçekteki hızlarından daha düşük algılanabilir.", "Bazı otomobil sürücüleri; küçük hacimli motosiklet araçlar için gereksiz vasıta düşüncesinde olabilir. Motosikletleri rakip araç düşündüğü gibi, çarpıp itip onları kenara atmak ve kendilerine yol açma davranışları riski taşıyabilir.", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "Ön ve arka teker izi tartışmalıdır; kesin doğru olan, şerit değiştirirken baş çevirip omuz üstünden bakmaktır.", "img": null}, {"id": 60, "s": 6, "q": "Güvenli motosiklet kullanımı için aşağıdaki şıklardan hangisi doğrudur?", "o": ["Dönüşlerde ve şerit değiştirileceği zaman aynalardan bakmak yeterli değildir. Mutlaka baş çevirip yol kontrol etmelidir.", "Virajlara hızlanıp girilmeli, yavaşlayarak çıkılmalıdır.", "Öndeki araçların sağ teker izi takip edilmelidir.", "Hepsi. Bütün şıklar doğrudur."], "c": 0, "n": "Yaralının kaskı çıkarılmaz (boyun yaralanması riski). İlk iş kaza yerinin güvenliğini sağlamaktır.", "img": null}, {"id": 61, "s": 6, "q": "Motosiklet kazasında ilk yapılması gereken işlem nasıl olmalıdır?", "o": ["Kaza geçiren motosiklet sürücüsünün nefes alabilmesi için öncelikle kaskı vücuduna doğru bastırılarak çıkarılır.", "Kask çıkarılmadan başı yan çevrilir ve yaralı pozisyonu alınır.", "Kaza yeri önlemleri alınır.", "Hepsi. Bütün şıklar doğrudur."], "c": 2, "n": "", "img": null}, {"id": 62, "s": 6, "q": "[[Motosiklet sürücüsü trafikte nelere dikkat etmelidir?]]", "o": ["Sürücü her zaman tam kask, giysi ve donanımlı motosiklet sürmelidir.", "Önündeki aracın sinyal vermeden dönüş manevraları yapabileceği düşünülmelidir.", "Ticari taksi veya minibüslerin yolcu almak için hatalı trafik kuralları ile kazaya neden olabilecekleri düşünülmelidir.", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "", "img": null}, {"id": 63, "s": 6, "q": "[[Motosikletin avantajları için aşağıdaki şıklardan hangisi doğrudur?]]", "o": ["Motosikletler düşük maliyetli ve ekonomik olması önemli ayrıcalıktır.", "Motosikletler az yakıt harcaması ile aynı zamanda çevre dostudur.", "Trafikte ve park yerinde az yer kaplar, ayrıca sürücü hareketli ve sportiftir.", "Hepsi, Bütün şıklar doğrudur."], "c": 3, "n": "", "img": null}, {"id": 64, "s": 7, "q": "Ağır vasıta sürücüsü için aşağıdakilerden hangisi doğrudur?", "o": ["Sürücünün her 5 yılda bir periyodik sağlık kontrolünden geçmesi sonucunda sürücü belgesinin devam edip etmeyeceğine karar verilmektedir.", "Sürücünün her 10 yılda bir periyodik sağlık kontrolünden geçmesi sonucunda sürücü belgesinin devam edip etmeyeceğine karar verilmektedir.", "Yurt içi sürüşlerinde takograf kullanma zorunluluğu yoktur.", "Yurt içi sürüşlerde SRC 5 belgesi bulundurmak zorundadır."], "c": 0, "n": "Ağır vasıta (C, D sınıfı) sürücü belgeleri 5 yılda bir sağlık kontrolüyle yenilenir.", "img": null}, {"id": 65, "s": 7, "q": "Ağır vasıta sürücüsü günde en fazla kaç saat araç sürebilir?", "o": ["Günde 8 saat", "Günde 9 saat", "Günde 12 saat", "Günde en fazla 10 saat"], "c": 1, "n": "Mevzuata göre ağır vasıta sürücüsünün günlük sürüş süresi 9 saati geçemez. Bu süre haftada iki kez 10 saate çıkarılabilir.", "img": null}, {"id": 66, "s": 7, "q": "Ağır vasıta araçlar için aşağıdaki şıklardan hangisi doğrudur?", "o": ["Yanından geçtiğimiz bu araçların teknik bakımlarının pahalı olması, bu nedenle çoğunun fren ve lastik donanımlarının yetersiz olması endişemizi bir kat artırmaktadır.", "Ağır vasıta sürücüsü çok tecrübeli olmasının yanı sıra uzun zaman araç kullanmaktan dolayı yorgun ve algılama zamanı uzamış olabilir.", "Geniş hacimli olma avantajlarını küçük araçlara karşı bir üstünlük olarak kullanmak isteyebilirler.", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "", "img": null}, {"id": 67, "s": 7, "q": "Ağır vasıta araç sollanması için aşağıdaki şıklardan hangisi doğrudur?", "o": ["Uzun araçların yanından geçerken sürücünün aynalardan göremediği noktalar olacağını düşünmeliyiz.", "Her zaman doğru sollama kararı veremeyebiliriz.", "Yeterince sollama mesafesi olduğuna doğru karar verip acele etmemeliyiz.", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "", "img": null}, {"id": 68, "s": 7, "q": "Otomobil sürücüsünün ağır vasıta ile karşılaştığında tedirgin eden nedenler aşağıdaki şıklardan hangisi olabilir?", "o": ["Ağır vasıtalar genelde daha gürültülü hareket eder ve gürültü dikkati dağıtabilir.", "Görüşü kapattığı için yolu kontrol etmemizi engeller.", "Çarpışma anında büyük ve güçlü hacmi ile büyük bir zarar vereceği endişesi taşırız.", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "", "img": null}, {"id": 69, "s": 7, "q": "[[Ağır vasıtalar ve sürücüleri için aşağıdaki şıklardan]] hangisi doğrudur?", "o": ["Şehirlerarası taşımacılıkta olan sürücü sosyal ortamdan, ailesinden uzakta günlerini geçirmekte ve araç kullanmaktadır. Bu nedenle önemli bir risk taşımaktadır.", "Risklere rağmen ağır vasıtalar farkında olmadığımız önemli bir iş ve görev yapmaktadır. Ülke ekonomisine taşımacılık sektöründe yarar sağlamaktadır.", "Yardımcı olmalıyız. Traktör, kamyon, tanker gibi buna benzer araçlar hayatımızı kolaylaştıran vasıtalardır. Trafikte bu araçlarla karşılaştığımızda onları bilerek ve gerekli önlemleri alarak tedbirli araç kullanmamızda yarar vardır.", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "", "img": null}, {"id": 70, "s": 8, "q": "Asli Kusur (Asıl Kusur) için aşağıdaki şıklardan hangisini doğru sayabiliriz?", "o": ["Sürücünün Asli Kusur olarak yaptığı hata sonucunda meydana gelebilecek kaza önemli ve ölümlü bir kaza olabilir.", "Sürücünün Asli Kusur (Asıl Kusur) olarak yapacağı hata sonucunda yoldaki diğer araçlar masum bir şekilde beklenmedik bir şekilde kaza ile tacize uğrayabilir.", "Asli Kusur (Asıl Kusur) hatası ile kazaya neden olan sürücünün cezası daha yüksektir.", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "", "img": null}, {"id": 71, "s": 8, "q": "Trafikte Asli Kusur (Asıl Kusur) için aşağıdaki şıklardan hangisi doğrudur?", "o": ["Park yasağı olan yerde park etmek Asli Kusur sayılır.", "Dönüş manevralarını hatalı yapmak Asli Kusur sayılır.", "Yaya geçidi çizgisi önünde durmak Asli Kusur sayılır.", "Kesik çizgili yollarda önümüzdeki aracı sollamak Asli Kusur sayılır."], "c": 1, "n": "Karayolları Trafik Kanunu 84. madde: dönüş kurallarına uymamak asli kusurdur. Hatalı park etmek ve yaya geçidinde durmak asli kusur değildir.", "img": null}, {"id": 72, "s": 8, "q": "Döner kavşak için aşağıdaki şıklardan hangisi doğrudur?", "o": ["Döner kavşak içindeki araç önceliklidir.", "Döner kavşakta araç sollanmaz.", "Döner kavşaktan çıkarken çıkış sinyali verilir.", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "Dönel kavşakta geçiş hakkı kavşağın içindeki araca aittir. Kavşaktan çıkarken sinyal verilir.", "img": null}, {"id": 73, "s": 8, "q": "En çok kaza nerede meydana gelmektedir?", "o": ["Döner kavşaklarda meydana gelmektedir.", "Virajlarda meydana gelmektedir.", "Kontrollü kavşaklarda meydana gelmektedir.", "Kontrolsüz kavşaklarda meydana gelmektedir."], "c": 3, "n": "KGM 2023 verilerine göre kazaların yarıdan fazlası kavşaklarda oluyor. Ders bu soruda kontrolsüz kavşağı doğru kabul ediyor.", "img": null}, {"id": 74, "s": 8, "q": "Trafikte Asli Kusur (Asıl Kusur) için aşağıdaki şıklardan hangisi doğrudur?", "o": ["Arkadan çarpmak Asli Kusur sayılır.", "Karşı yola geçmek Asli Kusur sayılır.", "Park etmiş araca çarpıp kaçmak Asli Kusur sayılır.", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "KTK 84. madde: arkadan çarpmak, karşı yöne girmek ve kurallara uygun park etmiş araca çarpmak asli kusurdur.", "img": null}, {"id": 75, "s": 8, "q": "Trafikte Asli Kusur (Asıl Kusur) için aşağıdaki şıklardan hangisi doğrudur?", "o": ["Park yasağı olan yerde park etmek Asli Kusur sayılır.", "Hız sınırlarını aşmak Asli Kusur sayılır.", "Geçme yasağı olan yerlerde öndeki aracı geçmek Asli Kusur sayılır.", "Hepsi. Bütün şıklar doğrudur."], "c": 2, "n": "KTK 84. madde: geçme yasağı olan yerde geçmek asli kusurdur. Hız sınırını aşmak ve park yasağı bu listede yer almaz.", "img": null}, {"id": 76, "s": 8, "q": "Trafikte Asli Kusur (Asıl Kusur) için aşağıdaki şıklardan hangisi doğrudur?", "o": ["Kavşaklarda geçiş hakkını yanlış kullanmak Asli Kusur sayılır.", "Yokuşta sollama yapmak Asli Kusur sayılır.", "Sağa dönüşleri kapalı yapmak Asli Kusur sayılır.", "Sola dönüşleri açıktan yapmak Asli Kusur sayılır."], "c": 0, "n": "KTK 84. madde: kavşaklarda geçiş önceliğine uymamak asli kusurdur.", "img": null}, {"id": 77, "s": 8, "q": "Kontrolsüz kavşağa yaklaşırken sürücünün ne yapması doğru olur?", "o": ["Yolun sağına yanaşması doğru olur.", "Yolun sağına yanaşırken sinyal vermesi doğru olur.", "Hızını yavaşlatması doğru olur.", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "", "img": null}, {"id": 78, "s": 8, "q": "Kontrolsüz kavşaklarda öncelikle geçiş hakkı için aşağıdaki şıklardan hangisi doğrudur?", "o": ["Anayoldaki araca aittir.", "Sağdan gelen araca aittir.", "Sağa dönüşlerde yayaya yol verilir.", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "Kontrolsüz kavşakta tali yoldan gelen ana yoldakine, eşit yollarda soldaki sağdan gelene yol verir. Dönüş yapan sürücü de yayalara yol verir. Üçü de kuraldır.", "img": null}, {"id": 79, "s": 8, "q": "Bölünmüş yolda hız limiti 110 km'dir. Dünyada ve Türkiye'de en çok ölümlü kaza olan bu yollarda kaza[[lar neden meydana gelmektedir?]]", "o": ["Hızlı gidildiği için.", "Hatalı sollama ile karşı yola geçildiği için. (Asli Kusur)", "Dikkat edilmediği için.", "Hızlı gitmeye uyum gösterilmediği için."], "c": 1, "n": "Bölünmüş yollardaki ölümlü kazaların en büyük nedeni, hatalı sollama ile karşı şeride geçmektir.", "img": "IMG_YOL"}, {"id": 80, "s": 9, "q": "Hatalı sollama yapan bir sürücü için ne yaparsınız?", "o": ["Selektör ve korna ile uyarıp hatasını anlatmaya çalışırım.", "Trafik görevlilerine haber veririm.", "Acil oradan uzaklaşırım.", "Kaza olmaması için hızımı azaltır, mümkünse beni geçmesi için sağ tarafa yanaşırım."], "c": 3, "n": "", "img": null}, {"id": 81, "s": 9, "q": "Araçlar neden çarpar?", "o": ["Frene geç basıldığı için.", "Hızlı gittiğimiz için.", "Yavaş gittiğimiz için.", "Düşündüğümüz için."], "c": 0, "n": "Kazaların büyük kısmı algılama zamanının uzaması nedeniyle frene geç basılmasından kaynaklanır.", "img": null}, {"id": 82, "s": 9, "q": "Gösterge panelinde bu lamba yanarsa ne yapmalıyız?", "o": ["En kısa zamanda servise gidilmelidir.", "Aracı kenara çekip yağlama sistemi kontrol edilmelidir.", "Aracı kenara çekip soğutma sistemi kontrol edilmelidir.", "En yakın benzinciye gidip benzin alınmalıdır."], "c": 1, "n": "Kırmızı yağ lambası motorun yağsız çalıştığını gösterir. Araç kenara çekilip yağlama sistemi kontrol edilmeli; devam etmek motoru bozar.", "img": "IMG_YAG"}, {"id": 83, "s": 9, "q": "Sürücü trafikte nasıl araç kullanmalıdır?", "o": ["Kendimizi yormadan ve trafikteki diğer sürücüleri riske atmadan trafik kurallarına göre araç kullanmalıyız.", "Trafikte araç kullanırken her yaşta ve her yetenekte sürücünün bulunabileceğini dikkate alarak araç kullanmalıyız.", "Sürücü insanın belirli yetenekleri olduğunu ve yaşam içerisinde farklı refleksler verebileceğini dikkate alarak araç kullanmalıyız.", "Hepsi. Bütün şıklar doğru."], "c": 3, "n": "", "img": null}, {"id": 84, "s": 9, "q": "Yolda giderken kaza yapmış araç görürseniz ne yaparsınız?", "o": ["Güvenli bir yerde durup kaza yeri önlemleri alırım.", "Trafiği tıkamamak için sol sinyal verip yoluma devam ederim.", "Trafiği tıkamamak için sağ sinyal verip geçerim.", "Trafikteki diğer araçlara korna çalıp uyarırım."], "c": 0, "n": "", "img": null}, {"id": 85, "s": 9, "q": "Araç kullanırken göz sağlığı için riskler nelerdir?", "o": ["Klimadan gelen hava gözlerimizi kurutur.", "Asfalttan parlayan güneş ışığı ve karşıdan gelen araçların farları gözümüzü yorar.", "Ormanlık alanda sık gölge ve ışıklı alanlar gözümüzü yorar.", "Hepsi doğru"], "c": 3, "n": "", "img": null}, {"id": 86, "s": 9, "q": "Uzun zaman araç kullandıktan sonra gözlerimizi nasıl dinlendirmeliyiz?", "o": ["Gölgelik alana ve uzağa uzun zaman bakarak dinlendirmeliyiz.", "En az 10 dakika gözlerimizi kapatarak dinlendirmeliyiz.", "Sıcak suyla yıkayarak dinlendirmeliyiz.", "Gözlerimizi hafif ovarak dinlendirmeliyiz."], "c": 0, "n": "", "img": null}, {"id": 87, "s": 9, "q": "Bilim insanları trafik kurallarını neye göre belirlemişlerdir?", "o": ["Yol şartlarına göre belirlemişlerdir.", "Araç kapasitesine göre belirlemişlerdir.", "İnsan yeteneklerine göre belirlemişlerdir.", "Hepsi. Bütün şıklar doğru."], "c": 2, "n": "", "img": null}, {"id": 88, "s": 9, "q": "Ülkemizde ve dünyada en çok ölümlü kaza nerede olur?", "o": ["Virajlı yolda", "İniş eğimli yollarda", "Yokuşta", "Kavşaklarda"], "c": 3, "n": "KGM 2023 verilerine göre kazaların %52'si kavşaklarda oluyor.", "img": null}, {"id": 89, "s": 9, "q": "Stajyer (aday sürücü) ne yapmalıdır?", "o": ["Öğrendiklerini zaman içinde doğru alışkanlık haline getirmelidir.", "Aracına ve direksiyonuna dikkat etmelidir.", "Trafik cezalarına dikkat etmelidir.", "Trafik sıkışıklığına dikkat etmelidir."], "c": 0, "n": "", "img": null}, {"id": 90, "s": 9, "q": "Kontrol edemediğimiz hız aşağıdakilerden hangisidir?", "o": ["Aşırı hızdır.", "Yavaş gittiğimiz hızdır.", "Gaz pedalının takıldığı hızdır.", "Yolun bozuk olduğu hızdır."], "c": 0, "n": "", "img": null}, {"id": 91, "s": 9, "q": "İyi bir sürüş eğitimi için ne yapılmalıdır?", "o": ["Sürüş eğitimi için mekanik hareketleri doğru şartlı refleks haline getirene kadar eğitim alınmalıdır.", "Bilim dünyası en az yaşı kadar direksiyon eğitimi alması gerektiğini söyler. Fakat insan yetenekleri farklı olduğunu dikkate alarak yeterince eğitim almalıyız.", "Sürücü stajyerlik döneminde hareketlerini disiplinli bir şekilde şartlı refleks haline getirmelidir.", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "", "img": null}, {"id": 92, "s": 9, "q": "Ülkemizde ve dünyada en çok kazayı hangi yaş grubu yapmaktadır?", "o": ["İleri yaş", "Orta yaş", "40-50 yaş", "18-25 yaş"], "c": 3, "n": "", "img": null}, {"id": 93, "s": 9, "q": "Algılama zamanı ne zaman uzar?", "o": ["Çok neşeli veya üzüntülü hallerde.", "Araç sürerken yakına bakıyorsak.", "Araç sürerken uzağa bakıyorsak.", "Aynalardan sık sık bakıyorsak uzar."], "c": 0, "n": "", "img": null}, {"id": 94, "s": 9, "q": "Yolda giderken yağ lambası yanarsa ne yaparsınız?", "o": ["Aracı kenara çeker stop ederim.", "En yakın servise giderim.", "Yavaş giderim.", "En yakın benzinciye giderim."], "c": 0, "n": "Yağ lambası yanarsa motorun zarar görmemesi için araç güvenli bir yere çekilip durdurulur.", "img": null}, {"id": 95, "s": 10, "q": "Kontrolsüz kavşağa yaklaşırken sürücünün ne yapması doğru olur?", "o": ["Yolun sağına yanaşması doğru olur.", "Yolun sağına yanaşırken sinyal vermesi doğru olur.", "Hızını yavaşlatması doğru olur.", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "", "img": null}, {"id": 96, "s": 10, "q": "Kontrolsüz kavşaklarda öncelikle geçiş hakkı için aşağıdaki şıklardan hangisi doğrudur?", "o": ["Ana yoldaki araca aittir.", "Karşıdan gelen araca aittir.", "Soldan gelen araca yol verilir.", "Hepsi. Bütün şıklar doğrudur."], "c": 0, "n": "Kontrolsüz kavşakta geçiş hakkı ana yoldaki araca aittir. Karşıdan veya soldan gelen araç önceliği yanlış verilmiş, bu yüzden “Hepsi” olamaz.", "img": null}, {"id": 97, "s": 10, "q": "En çok kaza nerede meydana gelmektedir?", "o": ["Döner kavşaklarda meydana gelmektedir.", "Virajlarda meydana gelmektedir.", "Yokuşlarda meydana gelmektedir.", "Kontrolsüz kavşaklarda meydana gelmektedir."], "c": 3, "n": "Ders içeriğine göre en çok kaza kontrolsüz kavşaklarda oluyor. KGM 2023 verisi de kazaların yarıdan fazlasının kavşaklarda olduğunu gösteriyor.", "img": null}, {"id": 98, "s": 10, "q": "Gece sürüşleri neden daha tehlikelidir?", "o": ["Gece sürüşlerinde görüş açısı azalır.", "Karanlık gözümüzü yorar.", "Karanlık algılamamızı uzatır.", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "Karanlık görüş açısını azaltır, gözü yorar ve algılamayı yavaşlatır.", "img": null}, {"id": 99, "s": 10, "q": "Kış aylarında aracımızın kaymaması için ne yapmalıyız?", "o": ["Sert direksiyon hareketlerinden, ani duruş ve kalkışlardan kaçınırız.", "Devamlı vites değiştirmeye hazır oluruz.", "Önümüzdeki araçları yakın takip ederiz.", "Direksiyonda seri hareketlere hazır oluruz."], "c": 0, "n": "", "img": null}, {"id": 100, "s": 10, "q": "Araç kullanırken ne zaman aracı kenara çekmemiz ve kontağı kapatmamız doğrudur?", "o": ["Frene bastığımızda araç bir tarafa çekiyorsa,", "Direksiyonu bıraktığımızda araç bir tarafa çekiyorsa,", "Benzin lambası yanıp sönmeye başladığı zaman,", "Üç saatten fazla süreyle araç kullanıyorsak."], "c": 3, "n": "Ders, 3 saatten fazla kesintisiz sürmemeyi vurguluyor. Diğer şıklar arıza belirtisi; onlarda servise gidilir.", "img": null}, {"id": 101, "s": 10, "q": "Sürücünün kazaya neden olabilecek önemli hatalarından biri aşağıdakilerden hangisi olabilir?", "o": ["Aracın fren ayarları bozuk olursa kazaya neden olabilir.", "Aracın far ayarları bozuk olursa kazaya neden olabilir.", "Sürücünün koltuk ayarları bozuk olursa kazaya neden olabilir.", "Aracın rot ayarları bozuk olursa kazaya neden olabilir."], "c": 2, "n": "Soru sürücünün kendi hatasını soruyor. Koltuk ayarı sürücüye bağlıdır; fren, far ve rot ayarları ise araçla ilgilidir.", "img": null}, {"id": 102, "s": 10, "q": "Genellikle trafik kazaları ne kadar zamanda meydana gelmektedir?", "o": ["Trafik kazaları 3 saniyede meydana gelmektedir.", "Trafik kazaları 8 saniyede meydana gelmektedir.", "Trafik kazaları 15 saniyede meydana gelmektedir.", "Trafik kazaları 1 dakika içinde meydana gelmektedir."], "c": 0, "n": "", "img": null}, {"id": 103, "s": 10, "q": "Trafikte en çok kaza hangi yollarda gerçekleşmektedir?", "o": ["Virajlı yollarda", "Düz yollarda", "Çok dik inişli ve çıkışlı yollarda", "Kaygan yollarda"], "c": 1, "n": "KGM 2023 verilerine göre kazaların %90'ı düz yollarda oluyor. Düz yolda hız artar, dikkat azalır.", "img": null}, {"id": 104, "s": 10, "q": "Algılama zamanı beynimizin karar verme süresidir. Sürücünün ne zaman algılama zamanı uzar?", "o": ["Koltuk ayarları yanlış olursa ve özellikle direksiyona yakın oturuyorsa.", "Sürücü frene geç basarsa algılama zamanı uzar.", "Araç sollarken algılama zamanı uzar.", "Hepsi. Bütün şıklar doğrudur."], "c": 0, "n": "Yanlış oturuş, özellikle direksiyona çok yakın oturmak, algılamayı yavaşlatır. Frene geç basmak ise algılama zamanının uzamasının sonucudur.", "img": null}, {"id": 105, "s": 10, "q": "Önemli kaza nedenlerinden birisi de hatalı sollama yapmaktır. Sollama kararını kim verir?", "o": ["Trafikte bulunan araçlar ve sürücüler yardımı ile karar vermelidir.", "Sürücü, önündeki aracın işareti yardımı ile karar vermelidir.", "Araç içinde bulunan arkadaşlar yardımı ile karar vermelidir.", "Sürücünün kendisi karar vermelidir."], "c": 3, "n": "Geçme kararını her zaman sürücünün kendisi vermelidir. Kamyonun el işareti veya yolcuların yönlendirmesi tehlikelidir.", "img": null}, {"id": 106, "s": 10, "q": "En çok kaza nedenlerinden birisi de aşağıdakilerden hangisidir?", "o": ["Bakımsız araçların frenleri patladığı için kaza olmaktadır.", "Hızlı gidildiği için kaza olmaktadır.", "Yeterince sollama mesafesi olmadığı zaman kaza olmaktadır.", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "Bakımsızlık, hız ve yetersiz sollama mesafesi üçü de önemli kaza nedenidir.", "img": null}, {"id": 107, "s": 10, "q": "Önemli kaza nedenlerinden birisi de arkadan çarpma ile gerçekle[[şir. Arkadan]] çarpmanın en önemli nedenlerinden birisi de aşağıdakilerden hangisidir?", "o": ["Frene geç basmaktır.", "Frenlerin tutmamasıdır.", "Yerlerin kaygan olmasıdır.", "Hepsi. Bütün şıklar doğrudur."], "c": 0, "n": "Arkadan çarpmanın en önemli nedeni frene geç basmaktır. Arkadan çarpmak KTK 84. maddeye göre asli kusurdur.", "img": null}, {"id": 108, "s": 10, "q": "Trafikte “Asli Kusur (Asıl Kusur)” için aşağıdaki şıklardan hangisi doğrudur?", "o": ["Hatalı park etmek Asli Kusur sayılır.", "Dönüş manevralarını hatalı yapmak Asli Kusur sayılır.", "Yaya geçidi çizgisi önünde durmak Asli Kusur sayılır.", "Kesik çizgili yollarda önümüzdeki aracı sollamak Asli Kusur sayılır."], "c": 1, "n": "KTK 84. madde: dönüş kurallarına uymamak asli kusurdur.", "img": null}, {"id": 109, "s": 10, "q": "Maddi hasarlı trafik kazalarında, durumun kayıt altına alınması için ne yapılmalıdır?", "o": ["Kazaya karışan taraflarca ortak olarak bir kaza tespit tutanağı hazırlanması [[gerekmektedir.]]", "Tutanakta kazaya dahil olan her iki tarafın da görüşlerinin yazılı beyanı şarttır.", "Tutanağın yanı sıra kazayı çeşitli açılardan görüntüleyen fotoğrafların çekilmesi de [[faydalı]] olacaktır.", "Hepsi. Bütün şıklar doğrudur."], "c": 3, "n": "", "img": null}, {"id": 110, "s": 11, "q": "Aşağıdakilerden hangisi, trafik kurallarına uymayacağı anlaşılan bir sürücü ile karşılaşıldığında yapılması gereken doğru davranıştır?", "o": ["Trafik kurallarına uyarım ve diğer sürücüye karşı öncelik hakkımı kullanırım.", "Diğer sürücünün yapabileceği hataları önlemek için hızımı azaltırım.", "Kornaya basarak diğer sürücüyü uyarır, yoluma devam ederim.", "Dörtlülerimi yakar, yoluma devam ederim."], "c": 1, "n": "Savunmacı sürüş: başkasının hatasını öngörüp hızı azaltmak kazayı önler. Öncelik hakkında ısrar etmek kazaya yol açar.", "img": null}, {"id": 111, "s": 11, "q": "Aşağıdakilerden hangisi, önünüzde belli bir sebep olmadan devamlı hız ve şerit değiştirerek yol alan bir sürücüyle karşılaşıldığında yapılması gereken doğru davranıştır?", "o": ["Mümkün olduğunca çabuk polise şikâyet ederim.", "Güvenlik mesafesini artırırım.", "Mümkün olduğunca çabuk sollarım.", "Kornaya basar uyarırım."], "c": 1, "n": "Savunmacı sürüş: dengesiz sürücüyle aradaki mesafe açılır.", "img": null}, {"id": 112, "s": 11, "q": "Aşağıdakilerden hangisi, yaşlıların trafikte daha fazla tehlike ile karşılaşıyor olmalarının sebebidir?", "o": ["Fiziksel hareket yetenekleri daha sınırlı olduğu için", "Çoğu zaman duyma yetenekleri sınırlı olduğu için", "Çoğu zaman modern durumlara hâkim olamadıkları için", "Hepsi doğru"], "c": 3, "n": "", "img": null}, {"id": 113, "s": 11, "q": "Aşağıdakilerden hangisi, trafikte yaşlılara karşı (özellikle yaya olduklarında) bir sürücü olarak yapılması gereken en doğru davranışı ifade eder?", "o": ["Böyle insanları korna çalarak veya selektör ile uyarmaya çalışırım.", "Bu insanların yapabilecekleri hataları önleyebilecek şekilde giderim.", "Sakin bir şekilde yanlarından geçerim.", "Kornaya basmam, hızla sollarından geçerim."], "c": 1, "n": "Yaşlı yayaların hata yapabileceği düşünülerek, bu hataları telafi edebilecek hız ve dikkatle geçilir.", "img": null}, {"id": 114, "s": 11, "q": "Aşağıdakilerden hangisi, trafikte özellikle çocukların tehlike içinde olmalarının gerekçesidir?", "o": ["Dikkatleri kolay dağıldığı ve trafikte çoğu zaman dikkat etmedikleri için", "Çoğu zaman ani hareket ettikleri ve tehlikeyi doğru olarak algılayamadıkları için", "Boyları kısa olduğundan, trafik durumlarına hâkim olamamalarından", "Hepsi doğru"], "c": 3, "n": "", "img": null}, {"id": 115, "s": 11, "q": "Aşağıdakilerden hangisi, sürücülerin trafikte çocuklara karşı nasıl davranması gerektiğinin doğru ifadesidir?", "o": ["Trafik durumuna uygun hareket etmeyeceklerini dikkate alırım.", "Bu insanların olası yanlışlarına karşı tedbirli olarak yola devam ederim.", "Fren hazırlığı içinde yola devam ederim.", "Hepsi doğru"], "c": 3, "n": "", "img": null}, {"id": 116, "s": 11, "q": "Aşağıdakilerden hangisi, araç kullanırken sahip olunması gereken doğru alışkanlıklar arasında yer alır?", "o": ["Aynalar yardımı ile önümüz ve arkamızda giden araçları kontrol altında tutabilmek", "Debriyaja basma alışkanlığının olması", "Gaza basma alışkanlığının olması", "Vites değiştirme alışkanlığının olması"], "c": 0, "n": "Aynaları sürekli kontrol etmek, çevredeki trafiğe hâkim olmanın temel alışkanlığıdır.", "img": null}, {"id": 117, "s": 11, "q": "Aşağıdakilerden hangisi dönüş manevraları için doğru bir yaklaşımdır?", "o": ["Sola dönüşler kapalı, sağa dönüşler açıktan yapılmalıdır.", "Sağa dönüşler kapalı, sola dönüşler açıktan yapılmalıdır.", "Sağa ve sola dönüşler aynı hızda yapılmalıdır.", "Sağa ve sola dönüşler hızlanarak yapılmalıdır."], "c": 1, "n": "Sağa dönüşler kapalı (sağ şeride yakın), sola dönüşler açıktan (geniş kavisle) yapılır.", "img": null}, {"id": 118, "s": 11, "q": "Aşağıdakilerden hangisi trafik ışıkları[[na yaklaşırken yapılması gereken doğru davranıştır?]]", "o": ["Sabit hızla yaklaşmak", "[[Yolun boş olduğunu varsayıp hızlanmak]]", "Yavaşlamaya hazır olmak", "[[Yolun ortasından gitmek]]"], "c": 2, "n": "Işık her an değişebileceği için kavşağa yavaşlamaya hazır yaklaşılır.", "img": null}, {"id": 119, "s": 11, "q": "Bölünmüş yollarda hız l[[imiti 110 km'dir. Dünyada ve Türkiye'de en çok ölümlü kazalar bu yollarda]] meydana gelmektedir. Aşağıdakilerden [[hangisi bu kazaların nedenidir?]]", "o": ["Hızlı gidildiği için.", "Hatalı sollama ile karşı yola geçildiği için.", "Dikkat edilmediği için.", "Hızlı gitmeye uyum gösterilmediği için."], "c": 1, "n": "Bölünmüş yollardaki ölümlü kazaların en büyük nedeni hatalı sollama ile karşı yola geçmektir.", "img": "IMG_YOL"}, {"id": 120, "s": 11, "q": "Aşağıdakilerden hangisi, sisli ve alacaka[[ranlık havalarda gözlerimizde meydana gelen olumsuzluklardandır?]]", "o": ["Gözler yavaş yavaş kararan havaya uyum [[sağlamakta zorlanır.]]", "Göz bebeği kasılmalarından görüş alanı k[[ısalır.]]", "Yorulan gözler geç görmeye başlar.", "Hepsi doğru."], "c": 3, "n": "", "img": null}, {"id": 121, "s": 11, "q": "Aşağıdakilerden hangisi, kış şartlarında a[[racımızda yapılması gerekenler arasında yer alır?]]", "o": ["Cam silecek suyu donmaya karşı katkı ila[[vesi yapılır.]]", "[[Yazlık lastikler kullanılmaya devam edilir.]]", "Kışlık fren sistemi takılır.", "[[Klima filtresi sökülür.]]"], "c": 0, "n": "Kışın cam suyuna antifriz katkısı eklenir. “Kışlık fren sistemi” diye bir şey yoktur.", "img": null}, {"id": 122, "s": 11, "q": "Aşağıdakilerden hangisi, kış şartlarında a[[racın kaymaması için yapılması gerekenler arasında yer]] alır?", "o": ["Sert direksiyon hareketlerinden, ani dur[[uş ve kalkışlardan kaçınmak]]", "Fren pedalına sert basmaya hazır olmak", "Gaz pedalına sert basmaya hazır olmak", "Trafikte vites değiştirmeye hazır olmak"], "c": 0, "n": "Kar ve buzda sert direksiyon, ani fren ve ani kalkış kaymaya yol açar.", "img": null}, {"id": 123, "s": 11, "q": "Aşağıdakilerden hangisinde, trafik kazaların[[ın nedenleri doğru olarak verilmiştir?]]", "o": ["Doğru davranışları şartlı refleks haline ge[[tirmeden sürücü]] belgesi ile trafiğe çıkan sürücüler.", "Uzun yıllar araç kullanan uzmanlaşmış fa[[kat yorgun]] araç sürmek zorunda kalan denetlenme[[yen sürücülerin]] aracı ile diğer sürücülere üstünlüklerini [[kullanması.]]", "Kazalara karşı caydırıcı kontrol ve cezala[[rın yetersiz olması.]]", "Bütün şıklar doğrudur."], "c": 3, "n": "", "img": null}, {"id": 124, "s": 11, "q": "Aşağıdakilerden hangisi, yaz mevsimin[[de karşılaşılan tehlikeler arasında yer]] alır?", "o": ["Motorun hararet yapma riski ile karşıl[[aşırız.]]", "Eriyen asfalt kayganlaşır ve lastiklere y[[apışır.]]", "Sıcaktan frenlerin tutmama riski ile ka[[rşılaşırız.]]", "Yazın daha fazla yakıt harcarız."], "c": 1, "n": "Sıcakta eriyen asfalt kayganlaşır ve lastiklere yapışır; fren mesafesi uzar.", "img": null}, {"id": 125, "s": 12, "q": "Aşağıdakilerden hangisi, kış şartlarında aracın <u>kaymaması için</u> yapılması gerekenler arasında yer alır?", "o": ["Fren pedalına sert basmaya hazır olmak.", "Gaz pedalına sert basmaya hazır olmak.", "Uygun vites değiştirmeye hazır olmak.", "Direksiyonu sert tutmayarak direksiyonun dönmesine müsaade ederiz."], "c": 3, "n": "Kaygan zeminde direksiyon sert tutulup ani hareket yapılmaz. Sert fren ve sert gaz kaymayı artırır.", "img": null}, {"id": 126, "s": 12, "q": "Aşağıdakilerden hangisi, hız seçiminde göz önünde bulundurulması gereken en önemli özelliktir?", "o": ["Motorun hacmi", "Aracın modeli", "Görüş mesafesi", "Aracın gücü"], "c": 2, "n": "Hız her zaman görüş mesafesine göre seçilir; görebildiğin mesafe içinde durabilmelisin.", "img": null}, {"id": 127, "s": 12, "q": "Aşağıdakilerden hangisi, otoyolda yapılabilecek <u>en fazla hızla</u> ilgili doğru ifadedir?", "o": ["En fazla 120 kilometre", "En fazla 110 kilometre", "Tam görüşle, fakat 100 kilometre", "Yol, trafik ve görüş durumuna göre seçilecek hız."], "c": 3, "n": "Yasal sınır olsa bile hız; yol, trafik ve görüş şartlarına göre seçilmelidir. Savunmacı sürüşün temel ilkesi budur.", "img": null}, {"id": 128, "s": 12, "q": "Aşağıdakilerden hangisi, otoban kullanabilecek araçlarla ilgili doğru ifadedir?", "o": ["Sadece 110 kilometre hızı aşabilen araçlar.", "Bütün motorlu araçlar.", "Sadece 40 kilometre hızı aşabilen araçlar.", "Sadece 90 kilometre hızı aşabilen araçlar"], "c": 2, "n": "Otoyolda asgari hız 40 km/s'tir. Bu hıza ulaşamayan araçlar (traktör, iş makinesi vb.) otoyola giremez.", "img": null}, {"id": 129, "s": 12, "q": "Aşağıdakilerden hangisi, fazla yakıt sarfiyatının nedenlerinden biridir?", "o": ["Lastik hava basınçlarının az olması.", "Lastik hava basınçlarının fazla olması.", "Rot ayarının bozuk olması.", "Hepsi. Bütün şıklar doğrudur."], "c": 0, "n": "Düşük lastik basıncı yuvarlanma direncini artırır ve yakıt tüketimini yükseltir. Basıncın fazla olması tüketimi artırmaz, bu yüzden “Hepsi” yanlış.", "img": null}, {"id": 130, "s": 12, "q": "Aşağıdakilerden hangisi, trafikte yol alırken direksiyon sisteminde bir problem hissedilmesi durumunda yapılması gereken doğru davranıştır?", "o": ["Yavaşlar ve yoluma devam ederim.", "Direksiyonu sıkı tutar ve yoluma devam ederim.", "Gidebiliyorsam en yakın servise gider kontrol ettiririm.", "Direksiyonda daha büyük problem olmadan acil varacağım yere devam ederim."], "c": 2, "n": "Direksiyonda sorun hissedilirse risk alınmadan en yakın servise gidilir. Sorun ciddiyse araç hiç kullanılmaz.", "img": null}, {"id": 131, "s": 12, "q": "Aşağıdakilerden hangisi, trafikte konvoy halinde giderken arkadaki aracın çok yaklaşması durumunda yapılması gereken doğru davranıştır?", "o": ["Arkadaki aracın fazla yaklaşmaması için sağ sinyal verip hızlanırım.", "Arkadaki aracın fazla yaklaşmaması için sol sinyal verip hızlanırım.", "Arkadaki aracın fazla yaklaşmaması için flaşörleri mi açar hızlanırım.", "Önümdeki araçla takip mesafemi artırarak arkadaki aracın beni geçmesine yardımcı olurum."], "c": 3, "n": "Arkadaki aracın geçebilmesi için öndeki araçla mesafe açılır. Hızlanmak riski artırır.", "img": null}, {"id": 132, "s": 12, "q": "Trafikte araç kullanırken başka sürücülerin hatalarına tahammül etmek, olumlu ve hoşgörülü olmak saygıya değer bir davranıştır. Fakat bu her zaman mümkün olmayabilir. Aşağıdakilerden hangisi, tahammülsüzlük durumunun sonuçlarını <u>açıklayan</u> en doğru ifadedir?", "o": ["Aç, yorgun, uykusuz, düşünceli, moralsiz, olumsuz olduğumuz zamanlarda diğer sürücülerin hatalarını algılayamayabilir ve kazaya neden olabiliriz.", "Tahammülsüz olduğumuz zaman daha saygılı olmayabiliriz.", "Tahammülsüz olduğumuz zaman mantıklı hareket etmeyebiliriz.", "Trafikte zamanında yetişmek için tahammülsüz olmak haklı bir nedendir."], "c": 2, "n": "Tahammülsüzlüğün sonucu mantıksız ve dürtüsel davranmaktır. (a) şıkkı tahammülsüzlüğün sonucunu değil nedenlerini anlatıyor.", "img": null}];
+const IMGS = {"IMG_KAVSAK": "<svg viewBox=\"0 0 100 90\"><polygon points=\"50,5 95,85 5,85\" fill=\"#fff\" stroke=\"#d62828\" stroke-width=\"9\" stroke-linejoin=\"round\"/><path d=\"M36 44 L64 72 M64 44 L36 72\" stroke=\"#111\" stroke-width=\"9\" stroke-linecap=\"round\"/></svg>", "IMG_YAG": "<svg viewBox=\"0 0 100 70\"><rect width=\"100\" height=\"70\" rx=\"8\" fill=\"#111\"/><path d=\"M18 40 h40 l14 -10 l12 6 l-10 4 l-12 8 h-44 z\" fill=\"none\" stroke=\"#e63946\" stroke-width=\"5\" stroke-linejoin=\"round\"/><path d=\"M30 40 v-10 h14 v10 M24 30 h26\" stroke=\"#e63946\" stroke-width=\"5\" fill=\"none\"/><circle cx=\"88\" cy=\"50\" r=\"4\" fill=\"#e63946\"/></svg>", "IMG_YOL": "<svg viewBox=\"0 0 120 60\"><rect width=\"120\" height=\"60\" rx=\"6\" fill=\"#2b2d31\"/><path d=\"M-5 50 Q60 30 125 5\" stroke=\"#f4c430\" stroke-width=\"3\" fill=\"none\"/><path d=\"M-5 56 Q60 36 125 11\" stroke=\"#f4c430\" stroke-width=\"3\" fill=\"none\"/><path d=\"M30 60 Q75 40 125 25\" stroke=\"#fff\" stroke-width=\"3\" stroke-dasharray=\"10 8\" fill=\"none\"/></svg>"};
+const LET = "abcde";
+const $ = id => document.getElementById(id);
+const fmt = s => s.replace(/\[\[(.+?)\]\]/g,'$1');
+const strip = s => s.replace(/<[^>]+>/g,"").replace(/\[\[(.+?)\]\]/g,"$1");
+
+let store = {seen:{}, run:null};
+try{ const raw = localStorage.getItem("tyg-quiz-v1"); if(raw) store = Object.assign(store, JSON.parse(raw)); }catch(e){}
+function save(){ try{ localStorage.setItem("tyg-quiz-v1", JSON.stringify(store)); }catch(e){} }
+
+let run = null;
+
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function isAll(t){ return /^(Hepsi|Bütün şıklar)/i.test(strip(t)); }
+
+/* ---------- home ---------- */
+function renderHome(){
+  $("kTotal").textContent = QS.length;
+  const seenIds = Object.keys(store.seen);
+  const right = seenIds.filter(k=>store.seen[k]).length;
+  $("kSeen").textContent = seenIds.length;
+  $("kRate").textContent = seenIds.length ? Math.round(100*right/seenIds.length)+"%" : "–";
+  const wrongs = seenIds.filter(k=>!store.seen[k]).length;
+  $("kWrong").textContent = wrongs;
+  $("wrongBtn").disabled = !wrongs;
+  $("wrongBtn").textContent = wrongs ? `Yanlışlarımı çöz (${wrongs})` : "Yanlışlarım (henüz yok)";
+  const list = $("secList");
+  const prev = new Set([...list.querySelectorAll("input:checked")].map(i=>+i.value));
+  const first = !list.children.length;
+  list.innerHTML = "";
+  SECTIONS.forEach((name,si)=>{
+    const ids = QS.filter(q=>q.s===si).map(q=>q.id);
+    const seen = ids.filter(id=>id in store.seen).length;
+    const ok = ids.filter(id=>store.seen[id]).length;
+    const pct = ids.length ? 100*seen/ids.length : 0;
+    const l = document.createElement("label"); l.className="sec";
+    l.innerHTML = `<input type="checkbox" id="sec${si}" value="${si}" ${first||prev.has(si)?"checked":""}><span class="nm">${name}</span><span class="ct">${seen}/${ids.length}<span class="mini"><i style="width:${pct}%;${seen&&ok<seen?`background:linear-gradient(90deg,var(--ok) ${100*ok/seen}%,var(--bad) 0)`:""}"></i></span></span>`;
+    list.appendChild(l);
+  });
+  const r = store.run;
+  if(r && !r.done){
+    const answered = Object.keys(r.ans).length;
+    $("resumeTxt").textContent = `Yarım kalan ${r.mode==="exam"?"sınavın":"pratiğin"} var: ${answered}/${r.order.length} soru cevaplandı.`;
+    $("resumeBox").hidden = false;
+  } else $("resumeBox").hidden = true;
+}
+function selectedSecs(){ return [...document.querySelectorAll("#secList input:checked")].map(i=>+i.value); }
+function updateStart(){
+  const secs = new Set(selectedSecs());
+  const n = QS.filter(q=>secs.has(q.s)).length;
+  $("startBtn").disabled = !n;
+  $("startBtn").textContent = n ? `Başla · ${n} soru` : "Konu seç";
+}
+function startRun(ids, mode){
+  const shufQ = $("oShufQ").checked, shufO = $("oShufO").checked;
+  const order = shufQ ? shuffle(ids) : ids.slice();
+  const opt = {};
+  order.forEach(id=>{
+    const q = QS[id]; const idx = q.o.map((_,i)=>i);
+    if(shufO){ const fixed = idx.filter(i=>isAll(q.o[i])); const mov = shuffle(idx.filter(i=>!isAll(q.o[i]))); opt[id]=mov.concat(fixed); }
+    else opt[id]=idx;
+  });
+  run = {mode, order, opt, ans:{}, cur:0, done:false};
+  store.run = run; save();
+  showQuiz();
+}
+$("startBtn").onclick = ()=>{
+  const secs = new Set(selectedSecs());
+  startRun(QS.filter(q=>secs.has(q.s)).map(q=>q.id), document.querySelector('input[name=mode]:checked').value);
+};
+$("wrongBtn").onclick = ()=>{
+  const ids = Object.keys(store.seen).filter(k=>!store.seen[k]).map(Number);
+  if(ids.length) startRun(ids, "practice");
+};
+$("allBtn").onclick = ()=>{ document.querySelectorAll("#secList input").forEach(i=>i.checked=true); updateStart(); };
+$("noneBtn").onclick = ()=>{ document.querySelectorAll("#secList input").forEach(i=>i.checked=false); updateStart(); };
+$("secList").addEventListener("change", updateStart);
+$("resumeBtn").onclick = ()=>{ run = store.run; showQuiz(); };
+$("resetBtn").onclick = ()=>{ $("resetAsk").hidden=false; };
+$("resetNo").onclick = ()=>{ $("resetAsk").hidden=true; };
+$("resetYes").onclick = ()=>{ store={seen:{},run:null}; save(); $("resetAsk").hidden=true; renderHome(); updateStart(); };
+
+/* ---------- quiz ---------- */
+function show(view){ ["home","quiz","result"].forEach(v=>$(v).hidden = v!==view); window.scrollTo(0,0); }
+function showQuiz(){ show("quiz"); renderQ(); }
+function counts(){
+  let g=0,r=0; for(const id of run.order){ if(id in run.ans){ (run.ans[id]===QS[id].c)?g++:r++; } } return {g,r,a:g+r};
+}
+function renderQ(){
+  const id = run.order[run.cur], q = QS[id], n = run.order.length;
+  const answered = id in run.ans, reveal = run.mode==="practice" && answered;
+  $("qPos").textContent = `Soru ${run.cur+1} / ${n}`;
+  const c = counts();
+  $("qScore").innerHTML = run.mode==="practice" ? `<span class="g">✓ ${c.g}</span><span class="r">✗ ${c.r}</span>` : `<span>${c.a} cevaplandı</span>`;
+  $("qRoad").style.width = (100*(run.cur+1)/n)+"%";
+  $("qSec").textContent = SECTIONS[q.s];
+  $("qStem").innerHTML = fmt(q.q);
+  if(q.img){ $("qImg").innerHTML = IMGS[q.img]; $("qImg").hidden=false; } else $("qImg").hidden=true;
+  const ol = $("qChoices"); ol.innerHTML="";
+  run.opt[id].forEach((oi,pos)=>{
+    const li=document.createElement("li");
+    const b=document.createElement("button"); b.type="button"; b.className="choice"; b.id=`ch${pos}`;
+    b.innerHTML=`<span class="k">${LET[pos]}</span><span class="t">${fmt(q.o[oi])}</span>`;
+    if(reveal){ b.disabled=true; if(oi===q.c) b.classList.add("right"); else if(oi===run.ans[id]) b.classList.add("wrong"); }
+    else if(answered && run.ans[id]===oi) b.classList.add("sel");
+    b.onclick=()=>choose(oi);
+    li.appendChild(b); ol.appendChild(li);
+  });
+  const fb=$("qFb");
+  if(reveal){
+    const ok = run.ans[id]===q.c;
+    const cpos = run.opt[id].indexOf(q.c);
+    fb.className = "fb "+(ok?"ok":"bad");
+    fb.innerHTML = `<div class="h">${ok?"Doğru":"Yanlış · doğru cevap "+LET[cpos].toUpperCase()}</div>${q.n?`<div>${fmt(q.n)}</div>`:""}`;
+    fb.hidden=false;
+  } else fb.hidden=true;
+  $("prevBtn").disabled = run.cur===0;
+  const last = run.cur===n-1;
+  $("nextBtn").textContent = last ? (run.mode==="exam"?"Sınavı bitir":"Bitir") : "Sonraki →";
+  renderGrid();
+}
+function renderGrid(){
+  const g=$("qGrid"); g.innerHTML="";
+  run.order.forEach((id,i)=>{
+    const b=document.createElement("button"); b.type="button"; b.textContent=i+1;
+    if(id in run.ans){ b.className = run.mode==="practice" ? (run.ans[id]===QS[id].c?"g":"r") : "a"; }
+    if(i===run.cur) b.classList.add("cur");
+    b.onclick=()=>{ run.cur=i; save(); renderQ(); window.scrollTo(0,0); };
+    g.appendChild(b);
+  });
+}
+function choose(oi){
+  const id = run.order[run.cur];
+  if(run.mode==="practice" && id in run.ans) return;
+  run.ans[id]=oi;
+  if(run.mode==="practice") store.seen[id] = oi===QS[id].c;
+  save(); renderQ();
+}
+function next(){
+  if(run.cur < run.order.length-1){ run.cur++; save(); renderQ(); window.scrollTo(0,0); }
+  else finish();
+}
+$("nextBtn").onclick = next;
+$("prevBtn").onclick = ()=>{ if(run.cur>0){ run.cur--; save(); renderQ(); window.scrollTo(0,0);} };
+$("quitBtn").onclick = ()=>{ save(); show("home"); renderHome(); updateStart(); };
+document.addEventListener("keydown", e=>{
+  if($("quiz").hidden || e.metaKey || e.ctrlKey || e.altKey) return;
+  const id = run.order[run.cur]; const k=e.key.toLowerCase();
+  let pos = "12345".indexOf(k); if(pos<0) pos = LET.indexOf(k);
+  if(pos>=0 && pos<run.opt[id].length){ e.preventDefault(); choose(run.opt[id][pos]); return; }
+  if(e.key==="Enter"||e.key==="ArrowRight"){ if(document.activeElement && document.activeElement.classList.contains("choice") && e.key==="Enter") return; e.preventDefault(); next(); }
+  if(e.key==="ArrowLeft"){ e.preventDefault(); $("prevBtn").click(); }
+});
+
+/* ---------- result ---------- */
+function finish(){
+  run.done = true;
+  if(run.mode==="exam") for(const id in run.ans) store.seen[id] = run.ans[id]===QS[id].c;
+  store.run = run; save();
+  const n=run.order.length, c=counts(), empty=n-c.a, pct=Math.round(100*c.g/n);
+  $("rMode").textContent = run.mode==="exam" ? "Sınav sonucu" : "Pratik sonucu";
+  $("rTitle").textContent = `${c.g} / ${n} doğru`;
+  $("rSub").textContent = pct>=85?"Sınava hazırsın.":pct>=60?"İyi gidiyor, yanlışları bir tur daha çöz.":"Yanlışları tekrar çözerek pekiştir.";
+  $("rTally").innerHTML = `<span class="g">✓ ${c.g} doğru</span><span class="r">✗ ${c.r} yanlış</span><span class="e">○ ${empty} boş</span>`;
+  const R=50, C=2*Math.PI*R;
+  $("rDial").innerHTML = `<circle cx="60" cy="60" r="${R}" fill="none" stroke="#3a4656" stroke-width="12"/><circle cx="60" cy="60" r="${R}" fill="none" stroke="var(--sign)" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C*pct/100} ${C}" transform="rotate(-90 60 60)"/><text x="60" y="68" text-anchor="middle" fill="var(--asphalt-ink)" font-family="Barlow Condensed,Arial Narrow,sans-serif" font-weight="800" font-size="30">${pct}%</text>`;
+  const bySec={};
+  run.order.forEach(id=>{ const s=QS[id].s; bySec[s]=bySec[s]||{t:0,g:0}; bySec[s].t++; if(run.ans[id]===QS[id].c) bySec[s].g++; });
+  $("rBars").innerHTML = Object.keys(bySec).sort((a,b)=>a-b).map(s=>{ const v=bySec[s], p=100*v.g/v.t;
+    return `<div class="bar"><span>${SECTIONS[s]}</span><span class="tr"><i style="width:${p}%;background:${p>=70?"var(--ok)":p>=50?"var(--warn)":"var(--bad)"}"></i></span><span class="v">${v.g}/${v.t}</span></div>`; }).join("");
+  const bad = run.order.filter(id=>run.ans[id]!==QS[id].c);
+  $("rRevCt").textContent = bad.length ? bad.length+" soru" : "";
+  $("rRev").innerHTML = bad.length ? bad.map(id=>{ const q=QS[id]; const y=run.ans[id];
+    return `<div class="ri"><div class="s">${fmt(q.q)}</div>${y===undefined?`<div class="y">Boş bıraktın</div>`:`<div class="y">Senin cevabın: ${fmt(q.o[y])}</div>`}<div class="c">Doğru cevap: ${fmt(q.o[q.c])}</div>${q.n?`<div class="n">${fmt(q.n)}</div>`:""}</div>`; }).join("")
+    : `<p style="margin:0;color:var(--muted)">Hepsi doğru, yanlışın yok.</p>`;
+  $("rRetryWrong").disabled = !bad.length;
+  $("rRetryWrong").onclick = ()=>startRun(bad,"practice");
+  show("result");
+}
+$("rHome").onclick = ()=>{ show("home"); renderHome(); updateStart(); };
+
+renderHome(); updateStart();
+</script>
+</body>
+</html>
